@@ -12,3 +12,11 @@
 - determine what GPT model to use (most likely an OpenAI model)
 - have a solid idea of the tools I'll be using 
 - would be nice to get a simple "Hello World" test of the API 
+
+
+# Week 2 (8.29.25 - 9.5.25)
+## **Summary / Beginning notes**
+
+### Technical updates
+
+### Goals for the upcoming week

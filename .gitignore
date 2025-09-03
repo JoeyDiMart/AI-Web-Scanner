@@ -1,0 +1,37 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+.env
+.venv/
+env/
+venv/
+
+# Secrets
+*.env
+*.secret
+openai_api_key.txt
+
+# Logs and temp files
+*.log
+*.tmp
+
+# OS junk
+.DS_Store
+
+# VSCode / IDE
+.vscode/
+.idea/
+
+# Test and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build/distribution
+build/
+dist/
+*.egg-info/
