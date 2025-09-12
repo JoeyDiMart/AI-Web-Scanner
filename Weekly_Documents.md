@@ -14,6 +14,7 @@
 - would be nice to get a simple "Hello World" test of the API 
 
 
+
 # Week 2 (8.29.25 - 9.5.25)
 ## **Summary / Beginning notes**
 - This week I did research on the different GPT models that OpenAI has to offer. Models like gpt-4o are Omni models, 
@@ -36,3 +37,47 @@ but it's possible to use two models and have them do different tasks
 - Figure out the project structure (possible each scan having its own python file) etc.
 - Implement one scan at least and print out the results 
 - look for a website that I can test (see what is secure vs not secure)
+
+
+
+# Week 3 (9.6.25 - 9.12.25)
+## **Summary / Beginning notes**
+- This week I did a testInjection.py to try out Injections (which was #3 on the list)
+- File structure: Since this is a bigger project how I organize this is going to be very important. I want to make it a CLI, 
+I think "wasp" is a cool name (since it uses owasp). The plan is to use the command line and do "wasp {url}" then if I want 
+to do a specific scan, like an injection, add for example "-i" or something. This is going to have a main project folder,
+a core folder that all 10 checks will be using, like one to generate a http request, one to store/record output, send output
+to the API and get a response, and a cli.py to convert the command line to the python code. The plan is to use threading
+for all 10 scans to be used. __init__.py was suggested by chatGPT to clean up imports 
+- I found httpbin.org to send requests and test scans with (it has no vulnerabilities) making it a good control group
+- I found a docker image for dvwa (Damn Vulnerable Web Application) on docker hub which is made to be an insecure website to practice 
+with. (username: admin password: password) 
+** Notes ** 
+- using the 'requests' library since it's very popular to make HTTP requests, send data, see responses, etc.
+- Injection: trick an input into being a part of the programs instructions (such as a SQL injection trying to make a 
+database query)
+- URL STRUCTURE: Protocol://Domain/path/path?QueryString#Fragment
+- Query string example: example.com/login?user=joey&password=qwerty
+- Fragment example: example.com#History (same page just scrolls you to the history section of the page)
+- HTTP requests;
+GET: retrieve data from a server (fetch a users profile)
+POST: send data to the server (create a new user / send login credentials for a user)
+PUT: update/replace existing resources (change a password and profile picture)
+PATCH: update only certain fields of a resource (specifically change just a password)
+DELETE: remove a resource (delete a user)
+- Other methods include HEAD, OPTIONS, TRACE, CONNECT
+- Status codes: 100 (continue), 101 (switching protocols), 
+- 200 (OK), 201 (created), (202) accepted, 204 (no content)
+- 3xx codes re redirects
+- 4xx are client errors
+- 5xx are server errors (look these up later)
+
+### Technical updates
+- created two test programs, one for injections, one for simply generating HTTP requests
+- set up the docker image for dvwa
+
+### Goals for the upcoming week
+- This weekend - do a lot more with the injections and generating responses
+- Get files/folders created so I can be more clear on how things will look
+- focus on injections and see if I can get some sort of AI feedback on something 
+- LEARN about injections a lot more and see what a response would look like from an injection

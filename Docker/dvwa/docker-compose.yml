@@ -1,0 +1,18 @@
+version: '3'
+services:
+  dvwa:
+    image: vulnerables/web-dvwa
+    container_name: dvwa
+    ports:
+      - "5050:80"
+    restart: always
+
+
+### How to use
+# cd AI-Web-Scanner/Docker/dvwa      make sure you're in the directory
+# docker compose up -d              to start
+# docker compose down               to stop
+
+# username: admin password: password
+# http://localhost:8080/setup.php  (can creat / reset database)
+# all data is lost within this container once you stop it

@@ -72,10 +72,10 @@ In summary, the provided payload exploits a weakness in input validation to alte
 Payload: ' OR 1=1 --
 Response: SQL syntax error What’s the risk level?
 
-## Response
+## ****Response
 - {
 "payload": "' OR 1=1 --",
 "response": "SQL syntax error",
 "risk_level": "Medium",
 "explanation": "The occurrence of an SQL syntax error in response to the injection payload indicates that user input might be concatenated directly into SQL queries without proper sanitization. While the payload did not successfully bypass authentication or extract data, the error disclosure can provide attackers with information useful for further exploitation. Therefore, the risk is considered medium, warranting further investigation and remediation."
-}
+}****

@@ -7,6 +7,7 @@ load_dotenv("test.env")  # take my API key from the test.env file
 
 client = OpenAI(api_key=os.getenv("API_KEY"))  # client is where you make API calls to
 gpt_model = "o3-mini"
+# gpt
 
 response = client.responses.create(
     model=gpt_model,
