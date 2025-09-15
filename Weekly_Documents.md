@@ -75,9 +75,27 @@ DELETE: remove a resource (delete a user)
 ### Technical updates
 - created two test programs, one for injections, one for simply generating HTTP requests
 - set up the docker image for dvwa
+- went to https://juice-shop.herokuapp.com/
 
 ### Goals for the upcoming week
 - This weekend - do a lot more with the injections and generating responses
-- Get files/folders created so I can be more clear on how things will look
+- Get files/folders created, so I can be more clear on how things will look
 - focus on injections and see if I can get some sort of AI feedback on something 
 - LEARN about injections a lot more and see what a response would look like from an injection
+
+
+
+# Week 4 (9.13.25 - 9.19.25)
+## **Summary / Beginning notes**
+- The first SQL Injection that worked. Went to 'http://localhost:505/vulnerabilities/sqli/' (the dvwa) and saw a field 
+asking for User ID. In the input box I did "' OR '1'='1" which returned the entire database of users (this is an always
+true injection which would give all the rows in the db)
+- if you put in "'" or "'1" as the input for the id, the website crashes with a 500 error  (an error-based injection)
+- "1' UNION SELECT null, version() --" is a union-based injection which allowed me to learn what type of database
+version so I have more info on this
+- "1' AND SLEEP(5) -- " is a time-based injection, in this example it should take 5 seconds to respond
+
+### Technical updates
+
+
+### Goals for the upcoming week
