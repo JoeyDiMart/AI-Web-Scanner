@@ -7,18 +7,25 @@ from urllib.parse import urljoin
 # grab
 def fetchInfo(url: str):
     s = requests.Session()  # Create a session object
-    r = s.get(url, allow_redirects=True,
-              timeout=15)  # send a GET request to the given url and go to a different page if asked to redirect
+    r = s.get(url, allow_redirects=True, timeout=15)  # send a GET request to the given url and go to a different page if asked to redirect
 
     return s, r.text, r.url  # return the session, html, and the url after being redirected
 
 
 def submitLogin(data, method, url, session):
-    print(data)
+    headers = {
+        "Referer": url,
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64)",
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+
     if method == "POST":
-        r = session.post(url, data=data, allow_redirects=True, timeout=15)
+        r = session.post(url, data=data, allow_redirects=False, timeout=15, headers=headers)
     else:
-        r = session.get(url, params=data, allow_redirects=True, timeout=15)
+        r = session.get(url, params=data, allow_redirects=True, timeout=15, headers=headers)
+
+    redirect_url = urljoin(url, r.headers["Location"])
+    r = session.get(redirect_url, timeout=15)
     return r.url
 def passLogin(html, url, username, password, session):  # we start off in a login page, this function will get us past this
     USER_KEYS = {"username", "user", "email", "login"}  # take this list to guess the input field and see which is for usernames
@@ -49,9 +56,8 @@ def passLogin(html, url, username, password, session):  # we start off in a logi
         elif (inp.get("type") or "").lower() == "password":
             val = password
         data[name] = val
-
     final_url = submitLogin(data, method, action_url, session)
-
+    print(final_url)
     return final_url
 
 
