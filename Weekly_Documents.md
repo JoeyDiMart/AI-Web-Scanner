@@ -94,8 +94,18 @@ true injection which would give all the rows in the db)
 - "1' UNION SELECT null, version() --" is a union-based injection which allowed me to learn what type of database
 version so I have more info on this
 - "1' AND SLEEP(5) -- " is a time-based injection, in this example it should take 5 seconds to respond
+- I have a second web app that I can use to test injections (and other types of vulnerabilities later), which is the owasp
+juice shop
+- both the dvwa (port 5050) and juice shop (port 3030) are both run locally on my desktop form a docker image
+- dvwa i was unable to log into, I got a token and a session cookie but logging in with python code does not work as i want
+- juice shop does let me log in and i even used an injection to log in
+- files and directories are made
 
 ### Technical updates
-
+- uses the requests and BeautifulSoup python libraries to parse through HTML and send HTTP requests to a web server
+- used these modules to find input fields and scan through a web app (first to log in)
 
 ### Goals for the upcoming week
+- get past a log in screen and to look through all input fields and test out injections
+- find what responses from the server I should record 
+- do a basic injection with juice shop and get a response about it with the openAI 
