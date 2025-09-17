@@ -1,0 +1,13 @@
+services:
+  juice-shop:
+    image: bkimminich/juice-shop
+    container_name: juice-shop
+    ports:
+      - "3030:3000"   # host:container
+    restart: unless-stopped
+    volumes:
+      # optional: persist data so solved challenges are saved
+      - juice_data:/juice-shop/data
+
+volumes:
+  juice_data:

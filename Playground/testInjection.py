@@ -4,29 +4,39 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
 
-# grab
 def fetchInfo(url: str):
     s = requests.Session()  # Create a session object
-    r = s.get(url, allow_redirects=True, timeout=15)  # send a GET request to the given url and go to a different page if asked to redirect
-
+    r = s.get(url, allow_redirects=False, timeout=15)  # send a GET request to the given url and go to a different page if asked to redirect
     return s, r.text, r.url  # return the session, html, and the url after being redirected
 
 
 def submitLogin(data, method, url, session):
     headers = {
-        "Referer": url,
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64)",
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Referer": url,  # make sure this is exactly http://localhost:5050/login.php
+        "Origin": "http://localhost:5050",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                      "AppleWebKit/537.36 (KHTML, like Gecko) "
+                      "Chrome/140.0.0.0 Safari/537.36",
+        "Content-Type": "application/x-www-form-urlencoded",
     }
+    session.cookies.set("security", "low", domain="localhost", path="/")
+    print("[DEBUG] Cookies before login:", session.cookies.get_dict())
+    print("[DEBUG] Submitting payload:", data)
 
     if method == "POST":
         r = session.post(url, data=data, allow_redirects=False, timeout=15, headers=headers)
     else:
-        r = session.get(url, params=data, allow_redirects=True, timeout=15, headers=headers)
+        r = session.get(url, params=data, allow_redirects=False, timeout=15, headers=headers)
+    print("[DEBUG] Submitted payload:", data)
 
-    redirect_url = urljoin(url, r.headers["Location"])
-    r = session.get(redirect_url, timeout=15)
-    return r.url
+    if r.status_code == 302 and r.headers.get("Location") == "index.php":
+        print("✅ Login success")
+        return urljoin(url, "index.php")
+    else:
+        print("❌ Login failed")
+        print("r.cookies: ", r.cookies)
+        return url
+
 def passLogin(html, url, username, password, session):  # we start off in a login page, this function will get us past this
     USER_KEYS = {"username", "user", "email", "login"}  # take this list to guess the input field and see which is for usernames
     PASS_KEYS = {"password", "pass", "pwd"}  # guess which field is named for password input
@@ -44,20 +54,21 @@ def passLogin(html, url, username, password, session):  # we start off in a logi
     action_url = urljoin(url, login_form.get("action") or url)
 
     data = {}
-    for inp in login_form.find_all("input"):  # loop to find the input fields for username and passwords
+    for inp in login_form.find_all("input"):
         name = inp.get("name")
         intype = (inp.get("type") or "").lower()
         if not name:
             continue
         val = inp.get("value") or ""
+
         in_name = name.lower()
         if in_name in USER_KEYS and intype != "submit":
             val = username
-        elif (inp.get("type") or "").lower() == "password":
+        elif intype == "password":
             val = password
+        # ✅ include hidden fields like user_token automatically
         data[name] = val
     final_url = submitLogin(data, method, action_url, session)
-    print(final_url)
     return final_url
 
 
