@@ -107,5 +107,140 @@ juice shop
 
 ### Goals for the upcoming week
 - get past a log in screen and to look through all input fields and test out injections
-- find what responses from the server I should record 
+- find what responses from the server I should record and put in txt file
 - do a basic injection with juice shop and get a response about it with the openAI 
+
+
+# Week 5 (9.20.25 - 9.26.25)
+## **Summary / Beginning notes**
+- I'm going to be using a framework called "Selenium," a link to a guide is here: https://www.geeksforgeeks.org/python/selenium-python-tutorial/
+- Selenium will let me automatically search for all types of fields for dynamic and static web pages so it can work for PHP, HTML, and React, etc...
+- Got a successful rating and API call so the OpanAI model I'm using can rate the website (gave juiceshop a 0 obviously)
+- Using requests and BeautifulSoup made me hit a roadblock for dynamically changing web pages, it COULD/WOULD work 
+but the process is a lot harder and would probably not work as well searching for the fields 
+- NOTE: selenium interacts with the webpage, it's unlike requests that sends http packets 
+- selenium would be perfect for al
+
+### Technical updates
+- ai_analysis.py created to make an API call, reading input from a results.txt and printing out the results
+- added a injections dictionary to show the different types of injections (SQL, noSQL, command, etc.) and try them for 
+multiple fields
+- made a list of injectable fields, since juiceshop is not a static HTML web page this is always empty when trying to find all input fields
+- added a function so when some sort of result is found it writes to a txt file 
+
+### Goals for the upcoming week
+- Empty lists for all types of fields using selenium, like anchors, inputs, buttons, forms
+- list of all injection types
+- if a response for trying an injection on an input field is 200 or 302, write it to the txt file 
+
+### AI Generated response for the OWASP top 10 scans using selenium:
+1) Broken Access Control — Selenium: very useful
+
+Why Selenium helps
+
+You can emulate different users (login as user A, click UI elements) and check whether UI/flows expose admin-only functionality.
+What to test with Selenium
+
+Login as a normal user → try visiting admin URLs, click UI elements that should be hidden.
+
+Manipulate forms/hidden fields in the browser (change role= user → admin) and submit.
+
+Verify UI elements and API responses change when switching accounts.
+Example (idea): use Selenium to log in as user, try driver.get("/#/admin") and assert redirect/403.
+
+Use other tools when
+
+You want direct API-level checks (crafting JWTs, tampering tokens) — use requests or a proxy.
+
+2) Cryptographic Failures (Sensitive Data Exposure) — Selenium: limited
+
+When Selenium helps
+
+Check for obvious client-side crypto misuse (e.g., secrets present in page source, encryption done in JS insecurely).
+
+Inspect how data is transmitted in browser (HTTP vs HTTPS) using browser devtools or proxy.
+Better tools
+
+Use requests to inspect TLS, Burp/mitmproxy to inspect transport, static analysis / SCA (dependency) scanners and server config checks for cipher suites.
+
+3) Insecure Design / Business Logic Flaws — Selenium: very useful
+
+Why Selenium helps
+
+Business logic issues are often visible only via multi-step UI flows.
+What to test with Selenium
+
+Skip workflow steps (e.g., go to checkout success page without paying), replay actions out of order, or attempt race conditions in the UI.
+
+Automate multiple browser instances to test concurrency/race conditions.
+Example: automate add-to-cart → tamper with order total in UI → simulate checkout.
+
+4) Security Misconfiguration — Selenium: sometimes useful
+
+When Selenium helps
+
+Detect client-visible misconfigurations (e.g., directory listing rendered, debug info visible, unprotected admin UI).
+What to test with Selenium
+
+Visit known admin pages, test default credentials via UI, check error pages for stack traces.
+Better tools
+
+Server config scanners, nmap, nikto, and manual review for server headers.
+
+5) Vulnerable & Outdated Components — Selenium: not the primary tool
+
+Why Selenium is limited
+
+Component versions are server-side details; Selenium can’t directly list packages.
+What Selenium can do
+
+Observe client-side libs loaded (script tags) and versions; then check if those versions are vulnerable.
+Better tools
+
+SCA tools, dependency scanners, npm audit, retire.js, or server-side inventory tools.
+
+6) Identification & Authentication Failures (Broken Authentication) — Selenium: very useful
+
+Why Selenium helps
+
+You can test the full auth flow as a real user: password reset, lockout, MFA, session expiry.
+What to test with Selenium
+
+Automate login attempts for brute-force protections, test password reset tokens (click link from email dev interface), test session fixation by setting cookies then logging in.
+
+Confirm logout clears session; test "remember me" behavior.
+Combine with requests for token-level manipulation.
+
+7) Software & Data Integrity Failures (e.g., unsafe deserialization, CI tampering) — Selenium: limited
+
+When Selenium helps
+
+If there's a front-end update mechanism (JS loaded remotely) you can observe unexpected script loads or tampered scripts.
+Better tools
+
+Build-chain auditing, integrity/hash checks, server-side code review, SCA.
+
+8) Security Logging & Monitoring Failures — Selenium: sometimes useful
+
+Why Selenium has a role
+
+You can generate actions via Selenium and verify whether the UI or admin interface shows logs, or to see if certain error conditions produce visible alerts.
+Better tools
+
+Check server-side logs directly, SIEM, or use the logging endpoint / API.
+
+9) Server-Side Request Forgery (SSRF) & Server-side Vulnerabilities — Selenium: limited / indirect
+
+When Selenium helps
+
+If SSRF is triggered from a UI (an upload that causes server to fetch a URL), you can use Selenium to fill the UI and trigger the server action.
+What to test with Selenium
+
+Fill the form that triggers server fetch (like URL preview) and supply attacker-controlled callback URLs (point to your local server or Burp Collaborator).
+Better tools
+
+Interact with API via requests or use external listeners (Burp Collaborator, OOB tooling) to detect SSRF.
+
+
+
+# Week 6 (9.27.25 - 10.2.25)

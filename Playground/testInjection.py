@@ -7,6 +7,7 @@ from urllib.parse import urljoin
 def fetchInfo(url: str):
     s = requests.Session()  # Create a session object
     r = s.get(url, allow_redirects=False, timeout=15)  # send a GET request to the given url and go to a different page if asked to redirect
+    print(r.text)
     return s, r.text, r.url  # return the session, html, and the url after being redirected
 
 
@@ -36,6 +37,7 @@ def submitLogin(data, method, url, session):
         print("❌ Login failed")
         print("r.cookies: ", r.cookies)
         return url
+
 
 def passLogin(html, url, username, password, session):  # we start off in a login page, this function will get us past this
     USER_KEYS = {"username", "user", "email", "login"}  # take this list to guess the input field and see which is for usernames
