@@ -76,12 +76,11 @@ def fetchInfo(url: str):
     # BeautifulSoup to parse through the HTML
     soup = BeautifulSoup(r.text, "html.parser")
 
-    injectable_fields = []  # list of all injectable fields
-    for field in soup.find_all(["input", "textarea"]):
-        name = field.get("name")
-        if name:
-            injectable_fields.append(name)
-    print("Injectable fields:", injectable_fields)
+    #injectable_fields = []  # list of all injectable fields
+    #for field in soup.find_all(["input", "textarea"]):
+    #    name = field.get("name")
+    #    if name:
+    #        injectable_fields.append(name)
 
     script_list = [tag["src"] for tag in soup.find_all("script") if tag.get("src")]  # list of all scripts
     for script in script_list:
