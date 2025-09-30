@@ -23,9 +23,25 @@ maintainers = [
   { name = "Matthew Lepinski", email = "mlepinski@ut.edu" }
 ]
 license = { file = "LICENSE" }
+keywords = [
+    "wasp",
+    "security",
+    "owasp",
+    "web-scanner",
+    "vulnerability",
+    "penetration-testing",
+    "ethical-hacking",
+    "ai",
+    "automation",
+]
 
 [project.scripts]
 waspai = "waspai.main:main"
+
+[project.urls]
+Repository = "https://github.com/JoeyDiMart/AI-Web-Scanner"
+Issues = "https://github.com/JoeyDiMart/AI-Web-Scanner/issues"
+Documentation = "https://github.com/JoeyDiMart/AI-Web-Scanner/blob/main/Weekly_Documents.md"
 
 [tool.hatch.version]
 path = "waspai/__init__.py"
