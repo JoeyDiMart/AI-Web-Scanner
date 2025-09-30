@@ -9,8 +9,8 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import re
 import ai_analysis
-from selenium import webdriver  # Javascript
-from selenium.webdriver.common.by import By
+#from selenium import webdriver  # Javascript
+#from selenium.webdriver.common.by import By
 
 injections = {
     "SQL Injection": [
@@ -189,7 +189,7 @@ def main():
         # Injection login
         login("' OR 1=1--", "THISDOESNTMATTER123", login_endpoints, session, BASE_URL)
 
-    # ai_analysis.main()
+    ai_analysis.main()
 
 
 if __name__ == "__main__":

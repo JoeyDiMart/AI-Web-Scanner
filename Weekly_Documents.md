@@ -133,7 +133,6 @@ multiple fields
 - list of all injection types
 - if a response for trying an injection on an input field is 200 or 302, write it to the txt file 
 - add an argument if the web app language is known (ex. it ends in .php so it's a static web page)
-- create a 
 
 ### AI Generated response for the OWASP top 10 scans using selenium:
 1) Broken Access Control — Selenium: very useful
@@ -246,3 +245,4 @@ Interact with API via requests or use external listeners (Burp Collaborator, OOB
 
 
 # Week 6 (9.27.25 - 10.2.25)
+## **Summary / Beginning notes**
