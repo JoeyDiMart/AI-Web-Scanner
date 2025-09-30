@@ -5,6 +5,8 @@ build-backend = "hatchling.build"
 [project]
 name = "waspai"
 dynamic = ["version"]
+description = "A python CLI AI-integrated web scanner that tests websites against the OWASP top 10 vulnerabilities and provides intelligent feedback for imrpovements"
+readme = "README.md"
 dependencies = [
     "python-dotenv>=0.21.0",
     "openai~=1.105.0",
@@ -14,6 +16,13 @@ dependencies = [
     "webdriver-manager~=4.0.2",
 ]
 requires-python = ">=3.10"
+authors = [
+    {name = "Joseph DiMartino", email = "joseph.dimartino1207@gmail.com"},
+    ]
+maintainers = [
+  { name = "Matthew Lepinski", email = "mlepinski@ut.edu" }
+]
+license = { file = "LICENSE" }
 
 [project.scripts]
 waspai = "waspai.main:main"
