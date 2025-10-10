@@ -111,6 +111,7 @@ juice shop
 - do a basic injection with juice shop and get a response about it with the openAI 
 
 
+
 # Week 5 (9.20.25 - 9.26.25)
 ## **Summary / Beginning notes**
 - I'm going to be using a framework called "Selenium," a link to a guide is here: https://www.geeksforgeeks.org/python/selenium-python-tutorial/
@@ -240,9 +241,29 @@ What to test with Selenium
 Fill the form that triggers server fetch (like URL preview) and supply attacker-controlled callback URLs (point to your local server or Burp Collaborator).
 Better tools
 
+
 Interact with API via requests or use external listeners (Burp Collaborator, OOB tooling) to detect SSRF.
 
 
 
 # Week 6 (9.27.25 - 10.2.25)
 ## **Summary / Beginning notes**
+- Finished making files (other than some scans)
+- made a pyproject.toml so this can be a custom CLI tool 
+- included version history, imports needed, licencing, dependencies, README
+
+### Technical updates
+- pyproject.toml made
+- main.py finished to take in command line arguments (complete)
+- made dictionaries for Scan types and Scan flags
+- List for possible app types
+- Error handling for bad arguments using the command line tool
+- create Scanner object
+- add hints for return types
+
+### Goals for the upcoming week
+- Finish GetInfo.py 
+- self.input_fields = None, self.headers = None, self.cookies = None
+- ^ make these full lists/dicts so they can be used for the scans
+- Nice to get done: API call to filter data, make the input_fields dict be cleaned up 
+
