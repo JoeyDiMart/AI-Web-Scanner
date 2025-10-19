@@ -267,3 +267,55 @@ Interact with API via requests or use external listeners (Burp Collaborator, OOB
 - ^ make these full lists/dicts so they can be used for the scans
 - Nice to get done: API call to filter data, make the input_fields dict be cleaned up 
 
+
+# Week 7 (10.3.25 - 10.10.25)
+## **Summary / Beginning notes**
+- https://www.youtube.com/watch?v=NB8OceGZGjA <- watched this selenium video to show how the scanner can go through web page 
+- created the GetInfo.py main method to 
+- initialized the Google web driver in main.py
+- slow week, input fields and cookies don't fill, need to restructure how headers work
+
+### Technical updates
+- added selenium version to the pyproject.toml
+- start Google selenium drivers in main.py 
+- fixed try/catch blocks in main to work for arg parser and driver
+- created main in GetInfo.py
+- temp creation of FillFields in GetInfo.py
+- installed seleniumwire to capture HTTP requests/responses (so we can get headers only using selenium)
+
+### Goals for the upcoming week
+- SPRINT WEEK 
+- finish GetInfo
+- optimize dictionary of input fields with AI
+- https://xkcd.com/
+
+
+
+# Week 8 (10.3.25 - 10.10.25)
+## **Summary / Beginning notes**
+- Started off with Selenium only, decided to use Requests + BeautifulSoup since it's more lightweight and could be a little faster
+- will use Selenium for a JS-heavy program, and in general if I can get more fields
+- Read the official documentation for Requests and BeautifulSoup so I know what to expect 
+- https://www.w3schools.com/python/module_requests.asp
+- 
+
+### Technical updates
+- added selenium version to the pyproject.toml
+- start Google selenium drivers in main.py 
+- fixed try/catch blocks in main to work for arg parser and driver
+- created main in GetInfo.py
+- temp creation of FillFields in GetInfo.py
+- installed seleniumwire to capture HTTP requests/responses (so we can get headers only using selenium)
+
+### Goals for the upcoming week
+- SPRINT WEEK 
+- finish GetInfo
+- optimize dictionary of input fields with AI
+- https://xkcd.com/
+
+
+
+
+
+
+- https://realpython.github.io/fake-jobs/

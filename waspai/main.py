@@ -1,5 +1,4 @@
 import argparse
-import requests
 from waspai import GetInfo
 
 APP_TYPES = ["auto", "php", "node", "django", "wordpress", "dotnet", "unknown"]
@@ -43,7 +42,7 @@ class Scanner:
         self.headers = None
         self.cookies = None
 
-    def getInfo(self):
+    def getInfo(self) -> None:
         self.input_fields, self.headers, self.cookies = GetInfo.main(self.url)
 
 
@@ -93,9 +92,9 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main() -> int:
     parser = build_parser()
-    args = parser.parse_args()
+    args_ns = parser.parse_args()
     try:
-        args = clean_args(args)
+        args = clean_args(args_ns)
     except argparse.ArgumentTypeError as e:
         parser.error(str(e))
         return 0

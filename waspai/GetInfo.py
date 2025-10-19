@@ -1,31 +1,35 @@
 '''
-
+This program gathers the initial cookies, headers, and creates a dictionary of all input fields/buttons
 '''
-
-from selenium import webdriver
-from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from typing import Tuple
+import requests
+from bs4 import BeautifulSoup
 
 
-def fillFields(url: str, driver: ) -> dict[str, list[str]]:
-    fields_dict = {
-        "input": [],
-        "button": [],
-        "textarea": [],
-        "select": [],
-        "a": [],
-    }
+# The global variables
+input_fields = {}
+headers = []
+cookies = []
 
 
+def main(url: str) -> Tuple[dict[str, list[str]], dict[str, str], list[str]]:
 
-    driver.get(url)
+    try:
+        response = requests.get(url, timeout=10)
+    except ConnectionError:
+        print("Connection Error: Failed to connect to URL")
+        return {"": [""]}, {"": ""}, [""]
+    except TimeoutError:
+        print("Timeout Error: Server took too long to respond")
+        return {"": [""]}, {"": ""}, [""]
+    except requests.exceptions.RequestException as e:
+        print("Request failed: {e}")
+        return {"": [""]}, {"": ""}, [""]
 
-    return fields_dict
+    print(response.content)
 
-def main(url):
-    driver = webdriver.Chrome()
-    input_fields, headers, cookies = fillFields(url, driver), "hello", "hey"
+
     return input_fields, headers, cookies
-    driver.quit()
+
+
+
