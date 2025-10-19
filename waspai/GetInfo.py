@@ -12,6 +12,11 @@ headers = []
 cookies = []
 
 
+def getHeaders(response):  # function for filling the headers field
+    global headers
+    headers = response.headers
+
+
 def main(url: str) -> Tuple[dict[str, list[str]], dict[str, str], list[str]]:
 
     try:
@@ -26,7 +31,7 @@ def main(url: str) -> Tuple[dict[str, list[str]], dict[str, str], list[str]]:
         print("Request failed: {e}")
         return {"": [""]}, {"": ""}, [""]
 
-    print(response.content)
+    getHeaders(response)
 
 
     return input_fields, headers, cookies
