@@ -297,25 +297,12 @@ Interact with API via requests or use external listeners (Burp Collaborator, OOB
 - will use Selenium for a JS-heavy program, and in general if I can get more fields
 - Read the official documentation for Requests and BeautifulSoup so I know what to expect 
 - https://www.w3schools.com/python/module_requests.asp
-- 
+- restructured main.py a bit
 
 ### Technical updates
-- added selenium version to the pyproject.toml
-- start Google selenium drivers in main.py 
-- fixed try/catch blocks in main to work for arg parser and driver
-- created main in GetInfo.py
-- temp creation of FillFields in GetInfo.py
-- installed seleniumwire to capture HTTP requests/responses (so we can get headers only using selenium)
+- tested on https://realpython.github.io/fake-jobs/ since this was given from the beautiful soup documentation 
 
 ### Goals for the upcoming week
-- SPRINT WEEK 
-- finish GetInfo
-- optimize dictionary of input fields with AI
-- https://xkcd.com/
 
 
 
-
-
-
-- https://realpython.github.io/fake-jobs/

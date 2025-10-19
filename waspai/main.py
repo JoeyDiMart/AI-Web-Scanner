@@ -1,5 +1,6 @@
 import argparse
 from waspai import GetInfo
+import requests
 
 APP_TYPES = ["auto", "php", "node", "django", "wordpress", "dotnet", "unknown"]
 SCAN_TYPES: dict[str, int] = {
@@ -36,6 +37,7 @@ class Scanner:
         self.app_type = args["app_type"]
         self.scan_type = args["scan_type"]
         self.print_responses = args["print_responses"]
+        self.session = requests.Session()  # created session object for the cookies
 
         # these will be filled by getInfo()
         self.input_fields = None
@@ -43,7 +45,7 @@ class Scanner:
         self.cookies = None
 
     def getInfo(self) -> None:
-        self.input_fields, self.headers, self.cookies = GetInfo.main(self.url)
+        self.input_fields, self.headers, self.cookies = GetInfo.main(self.url, self.session)
 
 
 def clean_args(raw: argparse.Namespace) -> dict[str: any]:

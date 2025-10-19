@@ -6,32 +6,64 @@ import requests
 from bs4 import BeautifulSoup
 
 
-# The global variables
-input_fields = {}
-headers = []
-cookies = []
-
-
 def getHeaders(response):  # function for filling the headers field
-    global headers
-    headers = response.headers
+    return response.headers
 
 
-def main(url: str) -> Tuple[dict[str, list[str]], dict[str, str], list[str]]:
+def getCookies(response):
+    return response.cookies.get_dict()
+
+
+def parseFields(input_fields, response):
+    soup = BeautifulSoup(response.text, "html.parser")
+    base_url = getattr(response, "url", "") or ""
+
+    form_list = []
+    for index, form in enumerate(soup.find_all("form")):  # loop through code for all forms first
+        fid = form.get("id") or f"form_{index}"
+
+    return input_fields
+
+
+def getInput_fields(response, url):
+    # AI generated dictionary to show all the fields to look for
+    input_fields = {
+        "input:text": [],
+        "input:password": [],
+        "input:hidden": [],  # CSRF tokens, session fields, flags
+        "input:file": [],  # file upload testing
+        "input:checkbox": [],
+        "input:radio": [],
+        "textarea": [],
+        "select": [],  # include options inside each select record
+        "button": [],  # <button> and input[type=submit]
+        "anchor": [],  # <a href=...> navigable links
+        "form": [],  # forms (action, method, enctype, inputs list)
+        "iframe": [],  # third-party frames (important for clickjacking/CSRF)
+        "other": []  # anything else worth flagging
+    }
+    input_fields = parseFields(input_fields, response)
+
+    return input_fields
+
+
+def main(url: str, session: requests.Session) -> Tuple[dict[str, list[dict[str, str]]], dict[str, str], dict[str, str]]:
 
     try:
-        response = requests.get(url, timeout=10)
-    except ConnectionError:
+        response = session.get(url, timeout=10)
+    except requests.exceptions.ConnectionError:
         print("Connection Error: Failed to connect to URL")
-        return {"": [""]}, {"": ""}, [""]
-    except TimeoutError:
+        return {"": [{"": ""}]}, {"": ""}, {"": ""}
+    except requests.exceptions.Timeout:
         print("Timeout Error: Server took too long to respond")
-        return {"": [""]}, {"": ""}, [""]
+        return {"": [{"": ""}]}, {"": ""}, {"": ""}
     except requests.exceptions.RequestException as e:
-        print("Request failed: {e}")
-        return {"": [""]}, {"": ""}, [""]
+        print(f"Request failed: {e}")
+        return {"": [{"": ""}]}, {"": ""}, {"": ""}
 
-    getHeaders(response)
+    headers = getHeaders(response)
+    cookies = getCookies(response)
+    input_fields = getInput_fields(response, url)
 
 
     return input_fields, headers, cookies
