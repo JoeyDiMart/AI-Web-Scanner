@@ -2,7 +2,31 @@ import argparse
 from waspai import GetInfo
 import requests
 
-APP_TYPES = ["auto", "php", "node", "django", "wordpress", "dotnet", "unknown"]
+APP_TYPES = [
+    "auto",
+    "static",
+    "php",
+    "laravel",
+    "django",
+    "flask",
+    "aspnet",
+    "dotnet-blazor",
+    "ruby-on-rails",
+    "java-spring",
+    "react",
+    "nextjs",
+    "vue",
+    "nuxt",
+    "angular",
+    "svelte",
+    "wordpress",
+    "drupal",
+    "joomla",
+    "magento",
+    "shopify",
+    "api",
+    "unknown"
+]
 SCAN_TYPES: dict[str, int] = {
     "b": 0,
     "c": 0,
@@ -40,12 +64,12 @@ class Scanner:
         self.session = requests.Session()  # created session object for the cookies
 
         # these will be filled by getInfo()
-        self.input_fields = None
+        self.entry_fields = None
         self.headers = None
         self.cookies = None
 
     def getInfo(self) -> None:
-        self.input_fields, self.headers, self.cookies = GetInfo.main(self.url, self.session)
+        self.entry_fields, self.headers, self.cookies = GetInfo.main(self.url, self.session, self.app_type)
 
 
 def clean_args(raw: argparse.Namespace) -> dict[str: any]:
@@ -102,6 +126,7 @@ def main() -> int:
         return 0
 
     scanner = Scanner(args)
+    print(scanner.app_type)
     scanner.getInfo()
 
     return 1

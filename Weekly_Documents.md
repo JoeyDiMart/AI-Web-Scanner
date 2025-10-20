@@ -301,6 +301,8 @@ Interact with API via requests or use external listeners (Burp Collaborator, OOB
 
 ### Technical updates
 - tested on https://realpython.github.io/fake-jobs/ since this was given from the beautiful soup documentation 
+- added a NEEDS_SELENIUM dict based on the app_type (which gets found if set to auto) -> returns a true/false
+- 
 
 ### Goals for the upcoming week
 
