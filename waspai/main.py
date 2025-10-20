@@ -126,7 +126,6 @@ def main() -> int:
         return 0
 
     scanner = Scanner(args)
-    print(scanner.app_type)
     scanner.getInfo()
 
     return 1

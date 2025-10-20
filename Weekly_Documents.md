@@ -295,16 +295,21 @@ Interact with API via requests or use external listeners (Burp Collaborator, OOB
 ## **Summary / Beginning notes**
 - Started off with Selenium only, decided to use Requests + BeautifulSoup since it's more lightweight and could be a little faster
 - will use Selenium for a JS-heavy program, and in general if I can get more fields
-- Read the official documentation for Requests and BeautifulSoup so I know what to expect 
+- Read the official documentation for Requests and BeautifulSoup, so I know what to expect 
 - https://www.w3schools.com/python/module_requests.asp
 - restructured main.py a bit
 
 ### Technical updates
 - tested on https://realpython.github.io/fake-jobs/ since this was given from the beautiful soup documentation 
 - added a NEEDS_SELENIUM dict based on the app_type (which gets found if set to auto) -> returns a true/false
-- 
+- added an optimize_info.py file to categorize the information fields
 
 ### Goals for the upcoming week
+- finish optimize_info.py and see if the return value has everything I want and is consistent
+- fix selenium somehow 
+- start scan_manager.py ; this would go through the entry fields available and if it's a field for injections, start injection
+on that field
+
 
 
 

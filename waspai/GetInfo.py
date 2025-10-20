@@ -5,15 +5,19 @@ from typing import Tuple, Optional
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
+import re  # search for patterns
+from waspai import optimize_info
 
 # Selenium imports
-from selenium import webdriver
+import traceback
 from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.webdriver.common.by import By
+from selenium.common.exceptions import WebDriverException, TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.common.exceptions import WebDriverException, TimeoutException
+from selenium import webdriver
+
 
 NEEDS_SELENIUM = {
     "auto": None,
@@ -40,6 +44,7 @@ NEEDS_SELENIUM = {
     "api": False,
     "unknown": True,
 }
+
 
 # helper functions
 def build_entry(site_url: str,
@@ -73,11 +78,45 @@ def build_entry(site_url: str,
     return entry
 
 
+def optimizeEntries(entry_fields):
+    pass
+
+
+
 def findApp_type(url, response, app_type):
     html = response.text.lower()
     headers = {k.lower(): v.lower() for k, v in response.headers.items()}
-    print(headers)
-    return True
+    content_type = headers.get("content-type", "")
+    script_count = len(re.findall(r"<script", html))
+    js_indicators = [
+        "reactroot",
+        "react-dom",
+        "next-data",
+        "__next",
+        "webpack",
+        "vite",
+        "vue.js",
+        "ng-version",
+        "svelte",
+        "blazor.webassembly.js",
+        "window.__initial_state__",
+        "document.createelement('app')",
+    ]
+
+    if "application/json" in content_type or html.strip().startswith("{"):  # means it returned JSON
+        return False
+
+    if any(token in html for token in
+           js_indicators):  # if the HTML has anything from that list, it means it's dynamic JS-heavy
+        return True
+
+    if script_count > 10:  # random number to count how many scrips are in a webpage
+        return True
+
+    if re.search(r'<script[^>]+src=["\'][^"\']+\.js["\']', html):  # see if a script has something
+        return True
+
+    return False
 
 
 def getHeaders(response) -> dict:  # function for filling the headers field
@@ -91,7 +130,7 @@ def getCookies(response) -> dict:
 def parseStaticEntries(url, response):
     page_url = getattr(response, "url", "")
     soup = BeautifulSoup(response.text, "html.parser")
-    entries: list[dict[str, any]] = [{"": ""}]
+    entries: list[dict[str, any]] = []  # start with empty list
 
     ####---  Loop through Forms  ---####
     for f_idx, form in enumerate(soup.find_all("form")):
@@ -146,35 +185,61 @@ def parseJSEntries(url: str):
     entries = []
     try:
         options = webdriver.ChromeOptions()
-        options.add_argument("--headless=new")
+        # Use classic headless mode for better compatibility
+        options.add_argument("--headless")
         options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--disable-gpu")
+        options.add_argument("--window-size=1920,1080")
+        options.add_argument("--ignore-certificate-errors")
 
-        driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+        # If Chrome isn’t found automatically, uncomment the next line:
+        # options.binary_location = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+
+        driver_path = ChromeDriverManager().install()
+        print(f"[Selenium] Using driver at: {driver_path}")
+
+        driver = webdriver.Chrome(service=ChromeService(driver_path), options=options)
+        print(f"[Selenium] Opening {url}")
         driver.get(url)
 
-        WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.TAG_NAME, "form")))
-        soup = BeautifulSoup(driver.page_source, "html.parser")
+        # Wait for full document ready state (not just forms)
+        WebDriverWait(driver, 15).until(
+            lambda d: d.execute_script("return document.readyState") == "complete"
+        )
 
-        entries = parseStaticEntries(url, type("Resp", (object,), {"text": driver.page_source, "url": url})())
+        # Give time for dynamic JS rendering
+        try:
+            WebDriverWait(driver, 5).until(
+                EC.presence_of_all_elements_located((By.TAG_NAME, "form"))
+            )
+        except TimeoutException:
+            print("[Selenium] No forms found yet – continuing anyway.")
+
+        html = driver.page_source
         driver.quit()
 
-    except (WebDriverException, TimeoutException) as e:
-        print(f"Selenium error: {e}")
-        return []
+        # Reuse your static parser on the rendered HTML
+        entries = parseStaticEntries(url, type("Resp", (object,), {"text": html, "url": url})())
+        return entries
 
-    return entries
+    except Exception as e:
+        print("[Selenium] Exception during parseJSEntries:")
+        traceback.print_exc()
+        print("[Selenium] Hint: check that Chrome is installed and ChromeDriver matches Chrome version.")
+        return []
 
 
 def getEntries(url: str, response: requests.Response, app_type: str):
     needs_selenium = NEEDS_SELENIUM.get(app_type, None)  # can be True, False, or None
     static_entries = parseStaticEntries(url, response)
 
-    if NEEDS_SELENIUM[app_type] is None:
+    if needs_selenium is None:
         needs_selenium = findApp_type(url, response, app_type)
     if needs_selenium:
         js_entries = parseJSEntries(url)
-        combined = {f"{e['form_action']}::{e['input_name']}": e for e in static_entries + js_entries if e.get("input_name")}
+        combined = {f"{e['form_action']}::{e['input_name']}": e for e in static_entries + js_entries if
+                    e.get("input_name")}
         entry_fields = {"inputs": list(combined.values())}
     else:
         entry_fields = {"inputs": static_entries}
@@ -182,7 +247,8 @@ def getEntries(url: str, response: requests.Response, app_type: str):
     return entry_fields
 
 
-def main(url: str, session: requests.Session, app_type: str) -> Tuple[dict[str, list[dict[str, str]]], dict[str, str], dict[str, str]]:
+def main(url: str, session: requests.Session, app_type: str) -> Tuple[
+    dict[str, list[dict[str, str]]], dict[str, str], dict[str, str]]:
     try:
         response = session.get(url, timeout=10)
     except requests.exceptions.ConnectionError:
@@ -198,5 +264,7 @@ def main(url: str, session: requests.Session, app_type: str) -> Tuple[dict[str, 
     headers = getHeaders(response)
     cookies = getCookies(response)
     entry_fields = getEntries(url, response, app_type)
+
+    #entry_fields = optimize_info.main(entry_fields)
 
     return entry_fields, headers, cookies
