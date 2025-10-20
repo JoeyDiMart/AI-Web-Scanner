@@ -22,7 +22,7 @@ def optimize(entry_fields):
         "classification" : "",      # password, username, csrf, email, textarea, submit, hidden, other
         "suggested_tests" : [],  # simple test values
         "owasp_tags" : []           # OWASP categories like ["injection","xss"]
-}
+    }
 
     sending_structure = []
 

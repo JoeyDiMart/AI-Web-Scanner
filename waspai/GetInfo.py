@@ -81,6 +81,7 @@ def build_entry(site_url: str,
 def optimizeEntries(entry_fields):
     pass
 
+
 def findApp_type(response, app_type):
     html = response.text.lower()
     headers = {k.lower(): v.lower() for k, v in response.headers.items()}
@@ -229,11 +230,11 @@ def parseJSEntries(url: str):
 
 
 def getEntries(url: str, response: requests.Response, app_type: str):
-    app_type, needs_selenium = NEEDS_SELENIUM.get(app_type, None)  # can be True, False, or None
+    needs_selenium = NEEDS_SELENIUM.get(app_type, None)  # can be True, False, or None
     static_entries = parseStaticEntries(url, response)
 
     if needs_selenium is None:
-        needs_selenium = findApp_type(response, app_type)
+        app_type, needs_selenium = findApp_type(response, app_type)
     if needs_selenium:
         js_entries = parseJSEntries(url)
         combined = {f"{e['form_action']}::{e['input_name']}": e for e in static_entries + js_entries if
@@ -262,8 +263,7 @@ def main(url: str, session: requests.Session, app_type: str) -> Tuple[
     headers = getHeaders(response)
     cookies = getCookies(response)
     entry_fields = getEntries(url, response, app_type)
-    print(entry_fields)
-    print(app_type)
+    #print(entry_fields)
     #entry_fields = optimize_info.main(entry_fields)
 
     return entry_fields, headers, cookies
