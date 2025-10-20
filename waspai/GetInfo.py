@@ -81,9 +81,7 @@ def build_entry(site_url: str,
 def optimizeEntries(entry_fields):
     pass
 
-
-
-def findApp_type(url, response, app_type):
+def findApp_type(response, app_type):
     html = response.text.lower()
     headers = {k.lower(): v.lower() for k, v in response.headers.items()}
     content_type = headers.get("content-type", "")
@@ -104,19 +102,19 @@ def findApp_type(url, response, app_type):
     ]
 
     if "application/json" in content_type or html.strip().startswith("{"):  # means it returned JSON
-        return False
+        return app_type, False
 
     if any(token in html for token in
            js_indicators):  # if the HTML has anything from that list, it means it's dynamic JS-heavy
-        return True
+        return app_type, True
 
     if script_count > 10:  # random number to count how many scrips are in a webpage
-        return True
+        return app_type, True
 
     if re.search(r'<script[^>]+src=["\'][^"\']+\.js["\']', html):  # see if a script has something
-        return True
+        return app_type, True
 
-    return False
+    return app_type, False
 
 
 def getHeaders(response) -> dict:  # function for filling the headers field
@@ -231,11 +229,11 @@ def parseJSEntries(url: str):
 
 
 def getEntries(url: str, response: requests.Response, app_type: str):
-    needs_selenium = NEEDS_SELENIUM.get(app_type, None)  # can be True, False, or None
+    app_type, needs_selenium = NEEDS_SELENIUM.get(app_type, None)  # can be True, False, or None
     static_entries = parseStaticEntries(url, response)
 
     if needs_selenium is None:
-        needs_selenium = findApp_type(url, response, app_type)
+        needs_selenium = findApp_type(response, app_type)
     if needs_selenium:
         js_entries = parseJSEntries(url)
         combined = {f"{e['form_action']}::{e['input_name']}": e for e in static_entries + js_entries if
@@ -264,7 +262,8 @@ def main(url: str, session: requests.Session, app_type: str) -> Tuple[
     headers = getHeaders(response)
     cookies = getCookies(response)
     entry_fields = getEntries(url, response, app_type)
-
+    print(entry_fields)
+    print(app_type)
     #entry_fields = optimize_info.main(entry_fields)
 
     return entry_fields, headers, cookies
