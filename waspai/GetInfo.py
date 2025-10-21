@@ -6,44 +6,9 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import re  # search for patterns
-from waspai import optimize_info
+#from waspai import optimize_info
 
 # Selenium imports
-import traceback
-from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.common.exceptions import WebDriverException, TimeoutException
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium import webdriver
-
-
-NEEDS_SELENIUM = {
-    "auto": None,
-    "static": False,
-    "php": False,
-    "laravel": False,
-    "django": False,
-    "flask": False,
-    "aspnet": False,
-    "dotnet-blazor": True,
-    "ruby-on-rails": False,
-    "java-spring": False,
-    "react": True,
-    "nextjs": True,
-    "vue": True,
-    "nuxt": True,
-    "angular": True,
-    "svelte": True,
-    "wordpress": False,
-    "drupal": False,
-    "joomla": False,
-    "magento": False,
-    "shopify": False,
-    "api": False,
-    "unknown": True,
-}
 
 
 # helper functions

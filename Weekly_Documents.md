@@ -291,7 +291,7 @@ Interact with API via requests or use external listeners (Burp Collaborator, OOB
 
 
 
-# Week 8 (10.3.25 - 10.10.25)
+# Week 8 (10.11.25 - 10.20.25)
 ## **Summary / Beginning notes**
 - Started off with Selenium only, decided to use Requests + BeautifulSoup since it's more lightweight and could be a little faster
 - will use Selenium for a JS-heavy program, and in general if I can get more fields
@@ -309,6 +309,22 @@ Interact with API via requests or use external listeners (Burp Collaborator, OOB
 - fix selenium somehow 
 - start scan_manager.py ; this would go through the entry fields available and if it's a field for injections, start injection
 on that field
+
+
+
+# Week 9 (10.21.25 - 10.24.25)
+## **Summary / Beginning notes**
+- https://www.geeksforgeeks.org/python/selenium-python-tutorial/
+- game plan is to rely on Selenium for all parsing on the website so there's no swapping from bs4 and selenium
+- Optimize_fields will 1 take in data about all fields that were found and 2 data from getApp_type function that can 
+hint on what type of web app it is. Then I'm hoping the OpenAI API will return the fields data how I want it to be
+returned and let me know what type of web app it is. 
+
+### Technical updates
+- 
+
+### Goals for the upcoming week
+- 
 
 
 
