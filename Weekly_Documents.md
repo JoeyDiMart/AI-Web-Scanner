@@ -319,12 +319,15 @@ on that field
 - Optimize_fields will 1 take in data about all fields that were found and 2 data from getApp_type function that can 
 hint on what type of web app it is. Then I'm hoping the OpenAI API will return the fields data how I want it to be
 returned and let me know what type of web app it is. 
+- fixes URL args to add http if not included
+- adaptive timeout variable for dynamic vs static webpages to change wait time
+- stepped through entire code to check for efficiency
 
 ### Technical updates
 - 
 
 ### Goals for the upcoming week
-- 
+- optimize fields will create a scans list, but if the user input had "-scan i" it should only keep fields that injections can utilize
 
 
 

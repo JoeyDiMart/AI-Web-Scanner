@@ -2,9 +2,10 @@ import argparse
 from waspai import GetInfo
 import requests
 
-APP_TYPES = [
+APP_OPTIONS = [
     "auto",
     "static",
+    "dynamic",
     "php",
     "laravel",
     "django",
@@ -43,7 +44,7 @@ SHORT_FLAG_MAP: dict[str, str] = {
     "b": "broken_access_control",  # b = Broken access
     "c": "cryptographic_failure",  # c = Cryptographic
     "i": "injection",  # i = injection
-    "d": "insecure_design",  # d = Design
+    "d": "insecure_design",  # d = Design00
     "m": "security_misconfiguration",  # m = misconfig
     "v": "vulnerable_and_outdated_components",  # v = vulnerable components
     "a": "identification_and_authentication_failures",  # a = auth / identification
@@ -57,27 +58,35 @@ class Scanner:
 
     def __init__(self, args):
         self.args = args
-        self.url = args["url"]
+        if not args["url"].startswith(("http://", "https://")):
+            self.url = ("https://" + args["url"]).strip().lower()
+        else:
+            self.url = args["url"].strip().lower()
         self.app_type = args["app_type"]
         self.scan_type = args["scan_type"]
         self.print_responses = args["print_responses"]
         self.session = requests.Session()  # created session object for the cookies
-
+        self.adaptive_timeout = 20
         # these will be filled by getInfo()
         self.entry_fields = None
         self.headers = None
         self.cookies = None
 
     def getInfo(self) -> None:
-        self.entry_fields, self.headers, self.cookies = GetInfo.main(self.url, self.session, self.app_type)
+        if self.app_type == "auto" or self.app_type == "unknown":
+            self.entry_fields, self.headers, self.cookies, self.adaptive_timeout, self.app_type = (
+                GetInfo.main(self.url, self.session, APP_OPTIONS, self.adaptive_timeout))
+        else:
+            self.entry_fields, self.headers, self.cookies, self.adaptive_timeout, self.app_type = (
+                GetInfo.main(self.url, self.session, APP_OPTIONS, self.adaptive_timeout, self.app_type))
 
 
 def clean_args(raw: argparse.Namespace) -> dict[str: any]:
     global SCAN_TYPES
     if raw.url is None:
         raise argparse.ArgumentTypeError("No URL given.")
-    if raw.app_type not in APP_TYPES:
-        raise argparse.ArgumentTypeError(f"Invalid App Type given, please select a valid option\n{APP_TYPES}.")
+    if raw.app_type not in APP_OPTIONS:
+        raise argparse.ArgumentTypeError(f"Invalid App Type given, please select a valid option\n{APP_OPTIONS}.")
     if raw.scan is not None:
         for j in SCAN_TYPES:
             SCAN_TYPES[j] = 1
@@ -106,7 +115,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         '-t', '--app-type',
         default="auto",
-        help=f"Specify app type (default: auto-detect)\n{APP_TYPES}"
+        help=f"Specify app type (default: auto-detect)\n{APP_OPTIONS}"
     )
     parser.add_argument('-scan', '--scan',
                         dest='scan',
