@@ -22,7 +22,9 @@ SHORT_FLAG_MAP: dict[str, str] = {
     "r": "server_side_requests_forgery"  # r = request forgery (SSRF)
 }
 
+
 def optimize(entry_fields, headers, app_type, dom_change, app_options):
+    app_type.remove("auto")
     if app_type is None:
         prompt = f"""
             You are an expert web fingerprinting and security analysis assistant.
@@ -137,7 +139,17 @@ def optimize(entry_fields, headers, app_type, dom_change, app_options):
             response_format={"type": "json_object"},
             temperature=0.2
         )
-        model_json = response.choices[0].message.parsed
+
+        message = response.choices[0].message
+        if hasattr(message, "parsed"):
+            model_json = message.parsed
+        else:
+            try:
+                model_json = json.loads(message.content)
+            except Exception:
+                print("[!] Model returned non-JSON output.")
+                model_json = {}
+
         if app_type is None:
             app_type = model_json.get("app_type", "unknown")
 

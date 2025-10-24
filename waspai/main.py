@@ -55,7 +55,6 @@ SHORT_FLAG_MAP: dict[str, str] = {
 
 
 class Scanner:
-
     def __init__(self, args):
         self.args = args
         if not args["url"].startswith(("http://", "https://")):
@@ -136,6 +135,11 @@ def main() -> int:
 
     scanner = Scanner(args)
     scanner.getInfo()
+
+    for i in scanner.entry_fields:
+        print(i)
+    print()
+    print(scanner.app_type)
 
     return 1
 

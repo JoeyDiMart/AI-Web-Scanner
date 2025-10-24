@@ -22,7 +22,6 @@ from selenium.webdriver.common.by import By
 REQUEST_TIMEOUT = 10
 
 
-
 def getHeaders(response) -> dict:  # function for filling the headers field
     return dict(response.headers)
 
@@ -49,13 +48,13 @@ def buildList(elements, url):
 
     for e in elements:
         entry = {}
-        href = (e.get_attribute("href") or "").strip().lower()
-
-        if not internalLink(href, url):
-            continue
-
         attr = e.parent.execute_script(script, e) or {}
         attr["tag"] = e.tag_name.lower()
+
+        if attr["tag"] == "a":
+            href = (e.get_attribute("href") or "").strip().lower()
+            if not internalLink(href, url):
+                continue
 
         attr["text"] = (e.text or "").strip()
 
@@ -159,6 +158,7 @@ def parseEntries(url: str, app_options, app_type, adaptive_timeout) -> tuple[lis
             By.XPATH,
             "//input | //textarea | //select | //button | //a | //*[@contenteditable='true']"
         )
+
         entries_list = buildList(elements, url)
         return entries_list, app_type, dom_change
     finally:
