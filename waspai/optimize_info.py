@@ -25,6 +25,7 @@ SHORT_FLAG_MAP: dict[str, str] = {
 
 def optimize(entry_fields, headers, app_type, dom_change, app_options):
     app_options.remove("auto")
+
     if app_type is None:
         prompt = f"""
             You are an expert web fingerprinting and security analysis assistant.
@@ -150,7 +151,7 @@ def optimize(entry_fields, headers, app_type, dom_change, app_options):
                 print("[!] Model returned non-JSON output.")
                 model_json = {}
 
-        if app_type is None:
+        if app_type == "auto":
             app_type = model_json.get("app_type", "unknown")
 
         entry_fields = model_json.get("entry_fields", entry_fields)

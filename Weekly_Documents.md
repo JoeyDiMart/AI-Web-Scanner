@@ -324,10 +324,18 @@ returned and let me know what type of web app it is.
 - stepped through entire code to check for efficiency
 
 ### Technical updates
-- 
+- Exclusively using Selenium
+- sending prompt to OpenAI API with model 4o mini to grab only useful forms/input fields and possibly find app type
+- edit the entry fields and find out app type 
 
 ### Goals for the upcoming week
 - optimize fields will create a scans list, but if the user input had "-scan i" it should only keep fields that injections can utilize
+- look into the BuiltWith API (might not be free) 
+- check out how to get the app type 
+- see how to begin injections/broken access control, etc. 
+- fix issue if inputs have the same form ID they should have the same possible scan
+
+
 
 
 
