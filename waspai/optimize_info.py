@@ -26,7 +26,7 @@ SHORT_FLAG_MAP: dict[str, str] = {
 def optimize(entry_fields, headers, app_type, dom_change, app_options):
     app_options.remove("auto")
 
-    if app_type is None:
+    if app_type == "auto":
         prompt = f"""
             You are an expert web fingerprinting and security analysis assistant.
             
