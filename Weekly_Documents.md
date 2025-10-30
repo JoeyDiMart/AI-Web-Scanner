@@ -346,6 +346,8 @@ worked fine
 ### Technical updates
 - slight updates to variables in GetInfo
 - fields within the same Form have matching possible scans
+- main "SHORT_FLAG_MAP" commented out and gets built in clean args function now
+- main "SCAN_TYPES" dict gets built with the flag map now (only 1 loop through)
 
 ### Goals for the upcoming week
 

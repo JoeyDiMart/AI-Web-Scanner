@@ -2,68 +2,14 @@ import argparse
 from waspai import GetInfo
 import requests
 
-APP_OPTIONS = [
-    "auto",
-    "static",
-    "dynamic",
-    "php",
-    "laravel",
-    "django",
-    "flask",
-    "aspnet",
-    "dotnet-blazor",
-    "ruby-on-rails",
-    "java-spring",
-    "react",
-    "nextjs",
-    "vue",
-    "nuxt",
-    "angular",
-    "svelte",
-    "wordpress",
-    "drupal",
-    "joomla",
-    "magento",
-    "shopify",
-    "api",
-    "unknown"
-]
-SCAN_TYPES: dict[str, int] = {
-    "b": 0,
-    "c": 0,
-    "i": 0,
-    "d": 0,  # when scan is done set value to 1
-    "m": 0,  # if scan shouldn't be done set value to 1 before starting
-    "v": 0,
-    "a": 0,
-    "s": 0,
-    "l": 0,
-    "r": 0
-}
-SHORT_FLAG_MAP: dict[str, str] = {
-    "b": "broken_access_control",  # b = Broken access
-    "c": "cryptographic_failure",  # c = Cryptographic
-    "i": "injection",  # i = injection
-    "d": "insecure_design",  # d = Design00
-    "m": "security_misconfiguration",  # m = misconfig
-    "v": "vulnerable_and_outdated_components",  # v = vulnerable components
-    "a": "identification_and_authentication_failures",  # a = auth / identification
-    "s": "software_and_data_integrity_failures",  # S = Software integrity
-    "l": "security_logging_and_monitoring_failures",  # l = logging
-    "r": "server_side_requests_forgery"  # r = request forgery (SSRF)
-}
-
 
 class Scanner:
     def __init__(self, args):
-        self.args = args
-        if not args["url"].startswith(("http://", "https://")):
-            self.url = ("https://" + args["url"]).strip().lower()
-        else:
-            self.url = args["url"].strip().lower()
+        self.url = args["url"]
         self.app_type = args["app_type"]
         self.scan_type = args["scan_type"]
-        self.print_responses = args["print_responses"]
+        #app_options = [x for x in app_options if x not in ["auto", "unknown"]]
+        self.print_responses = args["print_response"]
         self.session = requests.Session()  # created session object for the cookies
         self.adaptive_timeout = 20
         # these will be filled by getInfo()
@@ -79,32 +25,59 @@ class Scanner:
             self.entry_fields, self.headers, self.cookies, self.adaptive_timeout, self.app_type = (
                 GetInfo.main(self.url, self.session, APP_OPTIONS, self.adaptive_timeout, self.app_type))
 
+    def ManageScans(self) -> None:
+        return
+
 
 def clean_args(raw: argparse.Namespace) -> dict[str: any]:
-    global SCAN_TYPES
+    short_flag_map: dict[str, str] = {
+        "b": "broken_access_control",  # b = Broken access
+        "c": "cryptographic_failure",  # c = Cryptographic
+        "i": "injection",  # i = injection
+        "d": "insecure_design",  # d = Design00
+        "m": "security_misconfiguration",  # m = misconfig
+        "v": "vulnerable_and_outdated_components",  # v = vulnerable components
+        "a": "identification_and_authentication_failures",  # a = auth / identification
+        "s": "software_and_data_integrity_failures",  # S = Software integrity
+        "l": "security_logging_and_monitoring_failures",  # l = logging
+        "r": "server_side_requests_forgery"  # r = request forgery (SSRF)
+    }
+    scan_types: dict[str, int] = { # when scan is done set value to 1
+        "b": 0, "c": 0, "i": 0, "d": 0, "m": 0, "v": 0, "a": 0, "s": 0, "l": 0, "r": 0
+    }  # if scan shouldn't be done set value to 1 before starting
+    app_options = [
+        "auto", "static", "dynamic", "php", "laravel", "django", "flask", "aspnet", "dotnet-blazor", "ruby-on-rails",
+        "java-spring", "react", "nextjs", "vue", "nuxt", "angular", "svelte", "wordpress", "drupal", "joomla",
+        "magento", "shopify", "api", "unknown"
+    ]
+
+    if raw.scan is not None:
+        raw.scan = raw.scan.split(",")
+        for i in scan_types:
+            if i not in raw.scan:
+                del short_flag_map[i]
+                scan_types[i] = 1
+
+    # printing errors if something isn't in the above list or dict
+    if raw.app_type not in app_options:
+        raise argparse.ArgumentTypeError(f"Invalid App Type given, please select a valid option\n{app_options}.")
+    #elif raw.scan not in scan_types:
+    #    raise argparse.ArgumentTypeError(f"Invalid Scan given, please select a valid option\n{scan_types}.")
+    print(raw.app_type)
+    #if raw.app_type
+
     if raw.url is None:
         raise argparse.ArgumentTypeError("No URL given.")
-    if raw.app_type not in APP_OPTIONS:
-        raise argparse.ArgumentTypeError(f"Invalid App Type given, please select a valid option\n{APP_OPTIONS}.")
-    if raw.scan is not None:
-        for j in SCAN_TYPES:
-            SCAN_TYPES[j] = 1
-        scan = set(s.strip() for s in raw.scan.split(',') if s.strip())
-        for i in scan:
-            if i not in SCAN_TYPES:
-                raise argparse.ArgumentTypeError(f"Argument '{i}' is not a valid option.\n{SHORT_FLAG_MAP}")
-            else:
-                SCAN_TYPES[i] = 0
-    if raw.print_responses is None:
-        raw.print_responses = False
-    else:
-        raw.print_responses = True
+    elif not raw.url.startswith(("https://", "http://")):
+        raw.url = ("https://" + raw.url).strip().lower()
 
     return {
         "url": raw.url,
         "app_type": raw.app_type,
         "scan_type": raw.scan,
-        "print_responses": raw.print_responses
+        "scan_types": scan_types,
+        "short_flag_map": short_flag_map,
+        "print_response": raw.print_response
     }
 
 
@@ -114,14 +87,32 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         '-t', '--app-type',
         default="auto",
-        help=f"Specify app type (default: auto-detect)\n{APP_OPTIONS}"
+        help=f"Specify app type (default: auto-detect)\n"
     )
     parser.add_argument('-scan', '--scan',
                         dest='scan',
+                        type=str,
                         help="Comma-separated short letters of scans to run, ex. 'i' or 'i,b'. If not, runs all scans.")
-    parser.add_argument('-pr', '--print-responses', help="Print all JSON responses")
+    parser.add_argument('-pr', '--print-response',
+                        action='store_true',
+                        help="Print response for AI explanation")
 
     return parser
+
+
+def runner(scanner) -> str:
+    results = ""
+    #scanner.getInfo()
+
+    #print(scanner.scan_type)
+    ''' FOR TESTING PURPOSES TO SEE THE FIELDS UNCOMMENT THIS TO PRINT RESULTS OF SCAN* **************
+    for i in scanner.entry_fields:
+        print(i)
+    print(scanner.app_type)
+    '''
+    scanner.ManageScans()
+
+    return results
 
 
 def main() -> int:
@@ -133,14 +124,8 @@ def main() -> int:
         parser.error(str(e))
         return 0
 
-    scanner = Scanner(args)
-    scanner.getInfo()
-
-    ''' FOR TESTING PURPOSES TO SEE THE FIELDS UNCOMMENT THIS TO PRINT RESULTS OF SCAN* **************
-    for i in scanner.entry_fields:
-        print(i)
-    print(scanner.app_type)
-    '''
+    scanner = Scanner(args)  # create the Scanner object
+    results = runner(scanner)
 
     return 1
 
