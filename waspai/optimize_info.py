@@ -24,14 +24,15 @@ SHORT_FLAG_MAP: dict[str, str] = {
 
 
 def optimize(entry_fields, headers, app_type, dom_change, app_options):
-    app_options.remove("auto")
+    app_options = [x for x in app_options if x not in ["auto", "unknown"]]  # remove auto and unknown
 
     if app_type == "auto":
         prompt = f"""
             You are an expert web fingerprinting and security analysis assistant.
             
             **Your Tasks:**
-            1. Determine which web framework/platform the site is most likely built with (choose ONE from app_options)
+            1. Determine which web framework/platform the site is most likely built with (choose ONE from app_options, if 
+            one cannot be determined, choose either static or dynamic)
             2. Filter entry_fields to remove fields that CANNOT be scanned for OWASP Top 10 vulnerabilities
             3. For each remaining field, add a "possible_scan" key with a list of vulnerability short codes
 
@@ -66,6 +67,19 @@ def optimize(entry_fields, headers, app_type, dom_change, app_options):
             - Cancel/close buttons without forms
             - Static display elements
             - Pure CSS/JavaScript decorative elements
+            
+            Scanning Rules:
+            - Text inputs, textareas, search → ["i"]
+            - Password fields, login forms → ["a", "i"]
+            - File upload fields → ["i", "d", "r"]
+            - Forms with POST/PUT/DELETE → add ["b"]
+            - Hidden fields with tokens/IDs → add ["c"]
+            - URL/endpoint inputs → ["r", "i"]
+            
+            **Form Consistency Rule:**
+            If a form contains a password field, ALL fields in that form get ["a", "i", "b"]
+            If a form has file upload, ALL fields get ["i", "d", "r", "b"]
+            Merge all scan codes within each form - every field in the same form gets the UNION of all scan codes.
             
             **Response Format (valid JSON only):**
             {{

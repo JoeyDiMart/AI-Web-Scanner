@@ -83,7 +83,7 @@ def renderContent(driver: WebDriver, adaptive_timeout: int) -> tuple[int, int]:
         lambda d: d.execute_script("return document.readyState === 'complete'")
     )
 
-    for i in range(12):  # take up to 6 seconds to render DOM
+    for i in range(8):  # take up to 4 seconds to render DOM
         curr_len = len(driver.page_source)
 
         if curr_len == prev_len:
@@ -91,7 +91,7 @@ def renderContent(driver: WebDriver, adaptive_timeout: int) -> tuple[int, int]:
         else:
             counter = 0
             prev_len = curr_len
-        time.sleep(0.5)
+        time.sleep(0.3)
         if counter >= 3:
             break
 
@@ -138,7 +138,7 @@ def initDriver() -> WebDriver:  # helper function to start up the chrome driver
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=opts)
     return driver
-def parseEntries(url: str, app_options, app_type, adaptive_timeout) -> tuple[list, str, int]:
+def parseEntries(url: str, app_type, adaptive_timeout) -> tuple[list, str, int]:
     driver = initDriver()
     try:
         driver.get(url)
@@ -182,7 +182,7 @@ def main(url: str, session: requests.Session, app_options, adaptive_timeout: int
 
     headers = getHeaders(response)
     cookies = getCookies(response)
-    entry_fields, app_type, dom_change = parseEntries(url, app_options, app_type, adaptive_timeout)
+    entry_fields, app_type, dom_change = parseEntries(url, app_type, adaptive_timeout)
     entry_fields, app_type = optimize_info.main(entry_fields, headers, app_type, dom_change, app_options)
 
     return entry_fields, headers, cookies, adaptive_timeout, app_type

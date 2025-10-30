@@ -136,10 +136,11 @@ def main() -> int:
     scanner = Scanner(args)
     scanner.getInfo()
 
+    ''' FOR TESTING PURPOSES TO SEE THE FIELDS UNCOMMENT THIS TO PRINT RESULTS OF SCAN* **************
     for i in scanner.entry_fields:
         print(i)
-    print()
     print(scanner.app_type)
+    '''
 
     return 1
 

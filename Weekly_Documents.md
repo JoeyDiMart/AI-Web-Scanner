@@ -337,6 +337,20 @@ returned and let me know what type of web app it is.
 
 
 
+# Week 10 (10.25.25 - 10.31.25)
+## **Summary / Beginning notes**
+- wanted to look through GetInfo for changes to make scanner faster
+- changed prompt to fix the app type selection, BuiltWith API is not needed since the 4 websites I usually rotate to use
+worked fine
+
+### Technical updates
+- slight updates to variables in GetInfo
+- fields within the same Form have matching possible scans
+
+### Goals for the upcoming week
+
+
+
 
 
 
