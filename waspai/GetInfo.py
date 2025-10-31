@@ -165,7 +165,7 @@ def parseEntries(url: str, app_type, adaptive_timeout) -> tuple[list, str, int]:
         driver.quit()
 
 
-def main(url: str, session: requests.Session, app_options, adaptive_timeout: int, app_type="auto") -> (
+def main(url: str, session: requests.Session, app_options, adaptive_timeout: int, scan_map: dict[str,str], app_type="auto") -> (
         Tuple)[list, dict, dict, int, str]:
 
     try:
@@ -183,6 +183,6 @@ def main(url: str, session: requests.Session, app_options, adaptive_timeout: int
     headers = getHeaders(response)
     cookies = getCookies(response)
     entry_fields, app_type, dom_change = parseEntries(url, app_type, adaptive_timeout)
-    entry_fields, app_type = optimize_info.main(entry_fields, headers, app_type, dom_change, app_options)
+    entry_fields, app_type = optimize_info.main(entry_fields, headers, app_type, dom_change, app_options, scan_map)
 
     return entry_fields, headers, cookies, adaptive_timeout, app_type

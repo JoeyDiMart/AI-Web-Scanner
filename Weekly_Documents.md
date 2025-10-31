@@ -344,12 +344,16 @@ returned and let me know what type of web app it is.
 worked fine
 
 ### Technical updates
-- slight updates to variables in GetInfo
+- slight updates to variables in GetInfo 
 - fields within the same Form have matching possible scans
 - main "SHORT_FLAG_MAP" commented out and gets built in clean args function now
 - main "SCAN_TYPES" dict gets built with the flag map now (only 1 loop through)
+- changed Scanner object args
 
 ### Goals for the upcoming week
+- implement scan_manager to get things running
+- figure out threading to fun all scans
+- print and see if running all scans can work, then see if adding -scan <scan_type> will work and only run the ones I want
 
 
 

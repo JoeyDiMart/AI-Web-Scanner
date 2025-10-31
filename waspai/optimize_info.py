@@ -9,6 +9,7 @@ OPENAI_KEY = os.getenv("API_KEY")
 client = OpenAI(api_key=OPENAI_KEY)
 gpt_model = "gpt-4o-mini-2024-07-18"
 
+'''
 SHORT_FLAG_MAP: dict[str, str] = {
     "b": "broken_access_control",  # b = Broken access
     "c": "cryptographic_failure",  # c = Cryptographic
@@ -21,9 +22,10 @@ SHORT_FLAG_MAP: dict[str, str] = {
     "l": "security_logging_and_monitoring_failures",  # l = logging
     "r": "server_side_requests_forgery"  # r = request forgery (SSRF)
 }
+'''
 
 
-def optimize(entry_fields, headers, app_type, dom_change, app_options):
+def optimize(entry_fields, headers, app_type, dom_change, app_options, scan_map):
     app_options = [x for x in app_options if x not in ["auto", "unknown"]]  # remove auto and unknown
 
     if app_type == "auto":
@@ -50,7 +52,7 @@ def optimize(entry_fields, headers, app_type, dom_change, app_options):
             {json.dumps(app_options, indent=2)}
             
             **Vulnerability Short Codes:**
-            {json.dumps(SHORT_FLAG_MAP, indent=2)}
+            {json.dumps(scan_map, indent=2)}
             
             **Filtering Rules:**
             KEEP fields that can be tested:
@@ -112,7 +114,7 @@ def optimize(entry_fields, headers, app_type, dom_change, app_options):
             {json.dumps(app_type, indent=2)}
             
             **Vulnerability Short Codes:**
-            {json.dumps(SHORT_FLAG_MAP, indent=2)}
+            {json.dumps(scan_map, indent=2)}
             
             **Filtering Rules:**
             KEEP fields that can be tested:
@@ -177,6 +179,6 @@ def optimize(entry_fields, headers, app_type, dom_change, app_options):
     return entry_fields, app_type
 
 
-def main(entry_fields, headers, app_type, dom_change, app_options):
-    entry_fields, app_type = optimize(entry_fields, headers, app_type, dom_change, app_options)
+def main(entry_fields, headers, app_type, dom_change, app_options, scan_map):
+    entry_fields, app_type = optimize(entry_fields, headers, app_type, dom_change, app_options, scan_map)
     return entry_fields, app_type

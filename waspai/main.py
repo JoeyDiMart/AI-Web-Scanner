@@ -7,8 +7,9 @@ class Scanner:
     def __init__(self, args):
         self.url = args["url"]
         self.app_type = args["app_type"]
-        self.scan_type = args["scan_type"]
-        #app_options = [x for x in app_options if x not in ["auto", "unknown"]]
+        self.scan_types = args["scan_types"]
+        self.scan_map = args["scan_map"]
+        self.app_options = args["app_options"]
         self.print_responses = args["print_response"]
         self.session = requests.Session()  # created session object for the cookies
         self.adaptive_timeout = 20
@@ -16,14 +17,13 @@ class Scanner:
         self.entry_fields = None
         self.headers = None
         self.cookies = None
-
     def getInfo(self) -> None:
         if self.app_type == "auto" or self.app_type == "unknown":
             self.entry_fields, self.headers, self.cookies, self.adaptive_timeout, self.app_type = (
-                GetInfo.main(self.url, self.session, APP_OPTIONS, self.adaptive_timeout))
+                GetInfo.main(self.url, self.session, self.app_options, self.adaptive_timeout, self.scan_map))
         else:
             self.entry_fields, self.headers, self.cookies, self.adaptive_timeout, self.app_type = (
-                GetInfo.main(self.url, self.session, APP_OPTIONS, self.adaptive_timeout, self.app_type))
+                GetInfo.main(self.url, self.session, self.app_options, self.adaptive_timeout, self.scan_map, self.app_type))
 
     def ManageScans(self) -> None:
         return
@@ -61,10 +61,6 @@ def clean_args(raw: argparse.Namespace) -> dict[str: any]:
     # printing errors if something isn't in the above list or dict
     if raw.app_type not in app_options:
         raise argparse.ArgumentTypeError(f"Invalid App Type given, please select a valid option\n{app_options}.")
-    #elif raw.scan not in scan_types:
-    #    raise argparse.ArgumentTypeError(f"Invalid Scan given, please select a valid option\n{scan_types}.")
-    print(raw.app_type)
-    #if raw.app_type
 
     if raw.url is None:
         raise argparse.ArgumentTypeError("No URL given.")
@@ -74,9 +70,9 @@ def clean_args(raw: argparse.Namespace) -> dict[str: any]:
     return {
         "url": raw.url,
         "app_type": raw.app_type,
-        "scan_type": raw.scan,
+        "app_options": app_options,
+        "scan_map": short_flag_map,
         "scan_types": scan_types,
-        "short_flag_map": short_flag_map,
         "print_response": raw.print_response
     }
 
@@ -102,14 +98,16 @@ def build_parser() -> argparse.ArgumentParser:
 
 def runner(scanner) -> str:
     results = ""
-    #scanner.getInfo()
+    scanner.getInfo()
 
     #print(scanner.scan_type)
-    ''' FOR TESTING PURPOSES TO SEE THE FIELDS UNCOMMENT THIS TO PRINT RESULTS OF SCAN* **************
+    ''' FOR TESTING PURPOSES TO SEE THE FIELDS UNCOMMENT THIS TO PRINT RESULTS OF SCAN* ************** 
     for i in scanner.entry_fields:
         print(i)
     print(scanner.app_type)
     '''
+    print(scanner.scan_types)
+    print(scanner.scan_map)
     scanner.ManageScans()
 
     return results
