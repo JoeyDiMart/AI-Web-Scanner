@@ -101,11 +101,11 @@ def runner(scanner) -> str:
     scanner.getInfo()
 
     #print(scanner.scan_type)
-    ''' FOR TESTING PURPOSES TO SEE THE FIELDS UNCOMMENT THIS TO PRINT RESULTS OF SCAN* ************** 
+    ''' FOR TESTING PURPOSES TO SEE THE FIELDS UNCOMMENT THIS TO PRINT RESULTS OF SCAN* ************** '''
     for i in scanner.entry_fields:
         print(i)
     print(scanner.app_type)
-    '''
+    ''''''
     print(scanner.scan_types)
     print(scanner.scan_map)
     scanner.ManageScans()

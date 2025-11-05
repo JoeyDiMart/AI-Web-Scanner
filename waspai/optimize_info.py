@@ -51,8 +51,8 @@ def optimize(entry_fields, headers, app_type, dom_change, app_options, scan_map)
             Available App Options (choose ONE):
             {json.dumps(app_options, indent=2)}
             
-            **Vulnerability Short Codes:**
-            {json.dumps(scan_map, indent=2)}
+        
+        
             
             **Filtering Rules:**
             KEEP fields that can be tested:
@@ -180,5 +180,6 @@ def optimize(entry_fields, headers, app_type, dom_change, app_options, scan_map)
 
 
 def main(entry_fields, headers, app_type, dom_change, app_options, scan_map):
+    print("scan map", scan_map)
     entry_fields, app_type = optimize(entry_fields, headers, app_type, dom_change, app_options, scan_map)
     return entry_fields, app_type
