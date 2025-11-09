@@ -1,5 +1,6 @@
 import argparse
 from waspai import GetInfo
+from waspai import ScanManager
 import requests
 
 
@@ -17,16 +18,18 @@ class Scanner:
         self.entry_fields = None
         self.headers = None
         self.cookies = None
+
     def getInfo(self) -> None:
         if self.app_type == "auto" or self.app_type == "unknown":
             self.entry_fields, self.headers, self.cookies, self.adaptive_timeout, self.app_type = (
                 GetInfo.main(self.url, self.session, self.app_options, self.adaptive_timeout, self.scan_map))
         else:
             self.entry_fields, self.headers, self.cookies, self.adaptive_timeout, self.app_type = (
-                GetInfo.main(self.url, self.session, self.app_options, self.adaptive_timeout, self.scan_map, self.app_type))
+                GetInfo.main(self.url, self.session, self.app_options, self.adaptive_timeout, self.scan_map,
+                             self.app_type))
 
-    def ManageScans(self) -> None:
-        return
+    def manageScans(self) -> None:
+        ScanManager.main()
 
 
 def clean_args(raw: argparse.Namespace) -> dict[str: any]:
@@ -42,7 +45,7 @@ def clean_args(raw: argparse.Namespace) -> dict[str: any]:
         "l": "security_logging_and_monitoring_failures",  # l = logging
         "r": "server_side_requests_forgery"  # r = request forgery (SSRF)
     }
-    scan_types: dict[str, int] = { # when scan is done set value to 1
+    scan_types: dict[str, int] = {  # when scan is done set value to 1
         "b": 0, "c": 0, "i": 0, "d": 0, "m": 0, "v": 0, "a": 0, "s": 0, "l": 0, "r": 0
     }  # if scan shouldn't be done set value to 1 before starting
     app_options = [
@@ -98,17 +101,15 @@ def build_parser() -> argparse.ArgumentParser:
 
 def runner(scanner) -> str:
     results = ""
-    scanner.getInfo()
+    # scanner.getInfo()
 
-    #print(scanner.scan_type)
-    ''' FOR TESTING PURPOSES TO SEE THE FIELDS UNCOMMENT THIS TO PRINT RESULTS OF SCAN* ************** '''
+    # print(scanner.scan_type)
+    ''' FOR TESTING PURPOSES TO SEE THE FIELDS UNCOMMENT THIS TO PRINT RESULTS OF SCAN* ************** 
     for i in scanner.entry_fields:
         print(i)
     print(scanner.app_type)
-    ''''''
-    print(scanner.scan_types)
-    print(scanner.scan_map)
-    scanner.ManageScans()
+    '''
+    scanner.manageScans()
 
     return results
 
@@ -123,7 +124,7 @@ def main() -> int:
         return 0
 
     scanner = Scanner(args)  # create the Scanner object
-    results = runner(scanner)
+    results = runner(scanner)  # results will be the final scoring / feedback
 
     return 1
 
