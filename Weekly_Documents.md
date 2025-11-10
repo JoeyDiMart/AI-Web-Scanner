@@ -358,6 +358,24 @@ worked fine
 
 
 # Week 11 (10.25.25 - 10.31.25)
+## **Summary / Beginning notes**
+- Started work on the scan manager which would control the actual scans being run
+- print "scan ___ is running" to show the threads are actually working, adding -scan <scan_type> does only run the specified
+scans
+
+
+### Technical updates
+- created a main() function in scan_manager.py as well as a function for each scan type
+- used multithreading to call the thread functions at the same time
+- scan_type values all become 1 after scan is complete (subject to change for depth later)
+
+
+### Goals for the upcoming week
+- Implement the injection scanner 
+- plan for depth in the GetInfo section / resetting scan map
+
+
+
 
 
 
