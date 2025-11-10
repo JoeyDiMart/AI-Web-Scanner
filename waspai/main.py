@@ -29,7 +29,7 @@ class Scanner:
                              self.app_type))
 
     def manageScans(self) -> None:
-        ScanManager.main()
+        ScanManager.main(self.scan_types)
 
 
 def clean_args(raw: argparse.Namespace) -> dict[str: any]:

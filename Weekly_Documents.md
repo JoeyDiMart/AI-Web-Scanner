@@ -352,7 +352,7 @@ worked fine
 
 ### Goals for the upcoming week
 - implement scan_manager to get things running
-- figure out threading to fun all scans
+- figure out threading to run all scans
 - print and see if running all scans can work, then see if adding -scan <scan_type> will work and only run the ones I want
 
 
