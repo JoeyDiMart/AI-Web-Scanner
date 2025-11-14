@@ -176,10 +176,10 @@ def optimize(entry_fields, headers, app_type, dom_change, app_options, scan_map)
         print(f"[!] OpenAI failed: {e}")
         app_type = app_type or "unknown"
 
-    return entry_fields, app_type
+    return app_type, entry_fields
 
 
 def main(entry_fields, headers, app_type, dom_change, app_options, scan_map):
     print("scan map", scan_map)
-    entry_fields, app_type = optimize(entry_fields, headers, app_type, dom_change, app_options, scan_map)
-    return entry_fields, app_type
+    app_type, entry_fields = optimize(entry_fields, headers, app_type, dom_change, app_options, scan_map)
+    return app_type, entry_fields

@@ -357,7 +357,7 @@ worked fine
 
 
 
-# Week 11 (10.25.25 - 10.31.25)
+# Week 11 (11.1.25 - 10.7.25)
 ## **Summary / Beginning notes**
 - Started work on the scan manager which would control the actual scans being run
 - print "scan ___ is running" to show the threads are actually working, adding -scan <scan_type> does only run the specified
@@ -373,6 +373,26 @@ scans
 ### Goals for the upcoming week
 - Implement the injection scanner 
 - plan for depth in the GetInfo section / resetting scan map
+
+
+# Week 12 (11.8.25 - 11.14.25)
+## **Summary / Beginning notes**
+- began work on doing actual injections, planning mostly this week
+- moving driver to each scan file/runner
+- removed cookies since selenium updates/caches them
+- decided on using only one driver for all scans
+- decided on fields to be returned by scans
+
+
+### Technical updates
+- added injection to scans/__init__.py
+- ordered arg/return vars
+- removed scanner object cookies 
+- returned selenium Driver to main
+
+
+### Goals for the upcoming week
+- Complete implementation of Injection.py and print the final results
 
 
 

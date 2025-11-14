@@ -5,6 +5,7 @@ import requests
 
 
 class Scanner:
+    # def __init__(self):  # created for new objects at new depth
     def __init__(self, args):
         self.url = args["url"]
         self.app_type = args["app_type"]
@@ -12,24 +13,29 @@ class Scanner:
         self.scan_map = args["scan_map"]
         self.app_options = args["app_options"]
         self.print_responses = args["print_response"]
-        self.session = requests.Session()  # created session object for the cookies
+        self.session = requests.Session()  # needed only for headers
         self.adaptive_timeout = 20
+        self.depth = 0
+        self.max_depth = args["max_depth"]
+
         # these will be filled by getInfo()
+        self.driver = None
         self.entry_fields = None
         self.headers = None
-        self.cookies = None
+        # self.cookies = None
 
     def getInfo(self) -> None:
         if self.app_type == "auto" or self.app_type == "unknown":
-            self.entry_fields, self.headers, self.cookies, self.adaptive_timeout, self.app_type = (
-                GetInfo.main(self.url, self.session, self.app_options, self.adaptive_timeout, self.scan_map))
+            self.adaptive_timeout, self.app_type, self.driver, self.entry_fields, self.headers = (
+                GetInfo.main(self.adaptive_timeout, self.app_options, self.depth, self.scan_map, self.session,
+                             self.url))
         else:
-            self.entry_fields, self.headers, self.cookies, self.adaptive_timeout, self.app_type = (
-                GetInfo.main(self.url, self.session, self.app_options, self.adaptive_timeout, self.scan_map,
+            self.adaptive_timeout, self.app_type, self.driver, self.entry_fields, self.headers = (
+                GetInfo.main(self.adaptive_timeout, self.app_options, self.depth, self.scan_map, self.session, self.url,
                              self.app_type))
 
     def manageScans(self) -> None:
-        ScanManager.main(self.scan_types)
+        ScanManager.main(self.driver, self.entry_fields, self.headers, self.scan_types)
 
 
 def clean_args(raw: argparse.Namespace) -> dict[str: any]:
@@ -71,12 +77,13 @@ def clean_args(raw: argparse.Namespace) -> dict[str: any]:
         raw.url = ("https://" + raw.url).strip().lower()
 
     return {
-        "url": raw.url,
-        "app_type": raw.app_type,
         "app_options": app_options,
+        "app_type": raw.app_type,
+        "max_depth": raw.max_depth,
+        "print_response": raw.print_response,
         "scan_map": short_flag_map,
         "scan_types": scan_types,
-        "print_response": raw.print_response
+        "url": raw.url,
     }
 
 
@@ -95,20 +102,25 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument('-pr', '--print-response',
                         action='store_true',
                         help="Print response for AI explanation")
+    parser.add_argument('-depth', '--depth',
+                        help='Set a max depth for scanner (# of redirects to follow)',
+                        type=int,
+                        default=3,
+                        dest="max_depth")
 
     return parser
 
 
 def runner(scanner) -> str:
     results = ""
-    # scanner.getInfo()
+
+    scanner.getInfo()
 
     # print(scanner.scan_type)
-    ''' FOR TESTING PURPOSES TO SEE THE FIELDS UNCOMMENT THIS TO PRINT RESULTS OF SCAN* ************** 
+    ''' FOR TESTING PURPOSES TO SEE THE FIELDS UNCOMMENT THIS TO PRINT RESULTS OF SCAN* ************** '''
     for i in scanner.entry_fields:
         print(i)
-    print(scanner.app_type)
-    '''
+    ''' '''
     scanner.manageScans()
 
     return results

@@ -1,5 +1,4 @@
 
 
-class Feedback:
-    pass
-
+def main():
+    return 1

@@ -1,12 +1,11 @@
 '''
 This program gathers the initial cookies, headers, and entries (which can be any field that takes user input)
 '''
-from typing import Tuple, Optional
+from typing import Tuple, Optional, Any, List, Dict
 import requests
 from urllib.parse import urljoin, urlparse
 import time
 from waspai import optimize_info
-
 
 # Selenium imports
 from selenium import webdriver
@@ -26,16 +25,14 @@ def getHeaders(response) -> dict:  # function for filling the headers field
     return dict(response.headers)
 
 
-def getCookies(response) -> dict:  # fill the cookies field
-    return response.cookies.get_dict()
-
-
 def internalLink(href, url):
     if href.startswith(("javascript:", "mailto:", "tel:")):
         return False
     elif href.startswith("#") or href.startswith("/"):
         return True
     return href.startswith(url)
+
+
 def buildList(elements, url):
     entries_list = []
     script = """
@@ -73,6 +70,8 @@ def buildList(elements, url):
         entries_list.append(entry)
 
     return entries_list
+
+
 def renderContent(driver: WebDriver, adaptive_timeout: int) -> tuple[int, int]:
     initial_html = driver.page_source
     initial_len = len(initial_html)
@@ -125,6 +124,8 @@ def renderContent(driver: WebDriver, adaptive_timeout: int) -> tuple[int, int]:
     final_len = len(driver.page_source)
     dom_change = final_len - initial_len
     return dom_change, adaptive_timeout
+
+
 def initDriver() -> WebDriver:  # helper function to start up the chrome driver
 
     ### dont open a window, don't use GPU, and bypass bot detection ###
@@ -138,7 +139,9 @@ def initDriver() -> WebDriver:  # helper function to start up the chrome driver
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=opts)
     return driver
-def parseEntries(url: str, app_type, adaptive_timeout) -> tuple[list, str, int]:
+
+
+def parseEntries(adaptive_timeout: int, app_type: str, url: str) -> tuple[str, int, WebDriver, list[dict[Any, Any]]]:
     driver = initDriver()
     try:
         driver.get(url)
@@ -151,7 +154,7 @@ def parseEntries(url: str, app_type, adaptive_timeout) -> tuple[list, str, int]:
                 )
             )
         except Exception:
-            pass
+            raise
 
             # Grab all likely interactive elements including anchors
         elements = driver.find_elements(
@@ -160,29 +163,28 @@ def parseEntries(url: str, app_type, adaptive_timeout) -> tuple[list, str, int]:
         )
 
         entries_list = buildList(elements, url)
-        return entries_list, app_type, dom_change
-    finally:
+        return app_type, dom_change, driver, entries_list
+    except Exception:
         driver.quit()
+        raise
 
 
-def main(url: str, session: requests.Session, app_options, adaptive_timeout: int, scan_map: dict[str,str], app_type="auto") -> (
-        Tuple)[list, dict, dict, int, str]:
-
+def main(adaptive_timeout: int, app_options: list, depth: int, scan_map: dict[str, str], session: requests.Session,
+         url: str, app_type="auto") -> tuple[int, Any, Any, Any, dict]:
     try:
         response = session.get(url, timeout=REQUEST_TIMEOUT)
     except requests.exceptions.ConnectionError:
         print("Connection Error: Failed to connect to URL")
-        return [], {}, {}, 0, ""
+        return 0, "", None, {}, {}
     except requests.exceptions.Timeout:
         print("Timeout Error: Server took too long to respond")
-        return [], {}, {}, 0, ""
+        return 0, "", None, {}, {}
     except requests.exceptions.RequestException as e:
         print(f"Request failed: {e}")
-        return [], {}, {}, 0, ""
+        return 0, "", None, {}, {}
 
     headers = getHeaders(response)
-    cookies = getCookies(response)
-    entry_fields, app_type, dom_change = parseEntries(url, app_type, adaptive_timeout)
-    entry_fields, app_type = optimize_info.main(entry_fields, headers, app_type, dom_change, app_options, scan_map)
+    app_type, dom_change, driver, entry_fields = parseEntries(adaptive_timeout, app_type, url)
+    app_type, entry_fields = optimize_info.main(entry_fields, headers, app_type, dom_change, app_options, scan_map)
 
-    return entry_fields, headers, cookies, adaptive_timeout, app_type
+    return adaptive_timeout, app_type, driver, entry_fields, headers
