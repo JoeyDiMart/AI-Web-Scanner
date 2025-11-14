@@ -35,7 +35,7 @@ class Scanner:
                              self.app_type))
 
     def manageScans(self) -> None:
-        ScanManager.main(self.driver, self.entry_fields, self.headers, self.scan_types)
+        ScanManager.main(self.driver, self.entry_fields, self.headers, self.scan_types, self.url)
 
 
 def clean_args(raw: argparse.Namespace) -> dict[str: any]:

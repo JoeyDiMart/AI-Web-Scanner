@@ -375,6 +375,7 @@ scans
 - plan for depth in the GetInfo section / resetting scan map
 
 
+
 # Week 12 (11.8.25 - 11.14.25)
 ## **Summary / Beginning notes**
 - began work on doing actual injections, planning mostly this week
@@ -383,16 +384,15 @@ scans
 - decided on using only one driver for all scans
 - decided on fields to be returned by scans
 
-
 ### Technical updates
 - added injection to scans/__init__.py
 - ordered arg/return vars
 - removed scanner object cookies 
-- returned selenium Driver to main
-
+- returned selenium Driver to main and pass it to scan manager
 
 ### Goals for the upcoming week
-- Complete implementation of Injection.py and print the final results
+- Complete implementation of Injection.py and print the final results [define payload, send payload to fields, return results]
+- group by form
 
 
 
