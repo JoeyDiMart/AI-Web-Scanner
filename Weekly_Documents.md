@@ -389,10 +389,10 @@ scans
 - ordered arg/return vars
 - removed scanner object cookies 
 - returned selenium Driver to main and pass it to scan manager
+- group entry fields for injections by form and standalone
 
 ### Goals for the upcoming week
 - Complete implementation of Injection.py and print the final results [define payload, send payload to fields, return results]
-- group by form
 
 
 
