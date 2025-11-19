@@ -4,6 +4,10 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 
 from .scans import Injection
 
+# global so the threads dont over write each other
+scan_results = {}
+scan_results_lock = threading.Lock()
+
 
 def broken_access_control(driver: WebDriver, entry_fields: dict, headers: dict, url: str):
     # print("Broken access started")
@@ -15,10 +19,21 @@ def cryptographic_failure(driver: WebDriver, entry_fields: dict, headers: dict, 
     pass
 
 
-def injection(driver: WebDriver, injection_fields: dict, headers: dict, url: str):
+def injection(driver: WebDriver, injection_fields: list[dict], headers: dict, url: str):
     # print("injection started")
     # print(injection_fields)
-    Injection.main(driver, injection_fields, headers, url)
+    driver, found_vulnerabilities, num_fields, num_successful, results, successful_login_urls = (
+        Injection.main(driver, injection_fields, headers, url))
+
+    with scan_results_lock:
+        scan_results['i'] = {
+            'scan_type': 'injection',
+            'found_vulnerabilities': found_vulnerabilities,
+            'num_fields': num_fields,
+            'num_successful': num_successful,
+            'results': results,
+            'successful_login_urls': successful_login_urls
+        }
 
 
 def insecure_design(driver: WebDriver, entry_fields: dict, headers: dict, url: str):
@@ -56,7 +71,7 @@ def server_side_requests_forgery(driver: WebDriver, entry_fields: dict, headers:
     pass
 
 
-def main(driver: WebDriver, entry_fields: dict, headers: dict, scan_types: dict, url: str):
+def main(driver: WebDriver, entry_fields: list[dict], headers: dict, scan_types: dict, url: str):
     threads = {}
     function_map = {
         "b": broken_access_control,
@@ -81,7 +96,7 @@ def main(driver: WebDriver, entry_fields: dict, headers: dict, scan_types: dict,
             if temp_fields:
                 threads[name] = threading.Thread(
                     target=function_map[name],
-                    args=(driver, temp_fields, headers, scan_types, url)
+                    args=(driver, temp_fields, headers, url)
                 )
 
     for i in threads:
@@ -90,4 +105,5 @@ def main(driver: WebDriver, entry_fields: dict, headers: dict, scan_types: dict,
     for i in threads:
         threads[i].join()
 
-    print(scan_types)
+    return scan_results
+

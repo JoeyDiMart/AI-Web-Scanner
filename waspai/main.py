@@ -7,22 +7,25 @@ import requests
 class Scanner:
     # def __init__(self):  # created for new objects at new depth
     def __init__(self, args):
-        self.url = args["url"]
-        self.app_type = args["app_type"]
-        self.scan_types = args["scan_types"]
-        self.scan_map = args["scan_map"]
-        self.app_options = args["app_options"]
-        self.print_responses = args["print_response"]
-        self.session = requests.Session()  # needed only for headers
         self.adaptive_timeout = 20
+        self.app_options = args["app_options"]
+        self.app_type = args["app_type"]
         self.depth = 0
         self.max_depth = args["max_depth"]
+        self.print_responses = args["print_response"]
+        self.scan_map = args["scan_map"]
+        self.scan_types = args["scan_types"]
+        self.session = requests.Session()  # needed only for headers
+        self.url = args["url"]
 
         # these will be filled by getInfo()
         self.driver = None
         self.entry_fields = None
         self.headers = None
         # self.cookies = None
+
+        # after the scans finish
+        self.scan_results = None  # this is a list
 
     def getInfo(self) -> None:
         if self.app_type == "auto" or self.app_type == "unknown":
@@ -35,7 +38,7 @@ class Scanner:
                              self.app_type))
 
     def manageScans(self) -> None:
-        ScanManager.main(self.driver, self.entry_fields, self.headers, self.scan_types, self.url)
+        self.scan_results = ScanManager.main(self.driver, self.entry_fields, self.headers, self.scan_types, self.url)
 
 
 def clean_args(raw: argparse.Namespace) -> dict[str: any]:
@@ -117,11 +120,13 @@ def runner(scanner) -> str:
     scanner.getInfo()
 
     # print(scanner.scan_type)
-    ''' FOR TESTING PURPOSES TO SEE THE FIELDS UNCOMMENT THIS TO PRINT RESULTS OF SCAN* ************** '''
+    ''' FOR TESTING PURPOSES TO SEE THE FIELDS UNCOMMENT THIS TO PRINT RESULTS OF SCAN* ************** 
     for i in scanner.entry_fields:
         print(i)
-    ''' '''
+    '''
     scanner.manageScans()
+
+    print(scanner.scan_results)
 
     return results
 

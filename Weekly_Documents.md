@@ -396,6 +396,21 @@ scans
 
 
 
+# Week 13 (11.15.25 - 11.22.25)
+## **Summary / Beginning notes**
+- started working on Scan manager and injection 
+- defined what's passed as args and returned
+- created a list of dictionaries with the results for each scan type (only injection for now)
+- known plan for rating system with OpenAI
+
+### Technical updates
+- Implemented Injection.py to create scans, returned the results of different payloads, status code, etc.
+
+### Goals for the upcoming week
+- send results to OpenAI API and get a rating of the security of the website, use Claude again to create a useful prompt
+
+
+
 
 
 

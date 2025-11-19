@@ -180,6 +180,5 @@ def optimize(entry_fields, headers, app_type, dom_change, app_options, scan_map)
 
 
 def main(entry_fields, headers, app_type, dom_change, app_options, scan_map):
-    print("scan map", scan_map)
     app_type, entry_fields = optimize(entry_fields, headers, app_type, dom_change, app_options, scan_map)
     return app_type, entry_fields
