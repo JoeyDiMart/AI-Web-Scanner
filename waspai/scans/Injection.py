@@ -233,16 +233,15 @@ def testFormGroup(driver: WebDriver, fields: list[dict], form_id: str, headers: 
                   num_successful: int, url: str, successful_login_urls: list) -> tuple:
     results = []
 
-    # Get form action URL
+    # get form action URL to see the 'after' of the scan
     form_action = fields[0].get('form_action', url)
     if form_action == 'N/A' or not form_action:
         form_action = url
     elif not form_action.startswith('http'):
         from urllib.parse import urljoin
-        form_action = urljoin(url, form_action)
+        form_action = urljoin(url, form_action)  # if the action is just /login or something
 
-
-    # Test each injectable field
+    # test each injectable field
     for field_idx, field in enumerate(fields):
         field_name = field.get('name') or field.get('id') or f"field_{field_idx}"
         field_type = field.get('type', 'text').lower()
@@ -313,7 +312,6 @@ def testFormGroup(driver: WebDriver, fields: list[dict], form_id: str, headers: 
 
 def testStandaloneField(driver: WebDriver, field: dict, headers: dict, num_successful: int,
                         url: str, successful_login_urls: list) -> tuple:
-
     results = []
     field_name = field.get('name') or field.get('id') or 'unknown_field'
     field_type = field.get('type', 'text').lower()
@@ -391,6 +389,7 @@ def testStandaloneField(driver: WebDriver, field: dict, headers: dict, num_succe
     return results, num_successful
 
 
+# split the fields that are inside of a form and not
 def groupForms(injection_fields: list[dict]) -> tuple[dict, list]:
     # group by form id
     form_fields = {}
@@ -410,10 +409,8 @@ def groupForms(injection_fields: list[dict]) -> tuple[dict, list]:
 
 
 def main(driver: WebDriver, injection_fields: list[dict], headers: dict, url: str) -> tuple:
-
     num_fields = len(injection_fields)
     num_successful = 0
-    #original_cookies = driver.get_cookies()
     results = []
     successful_login_urls = []  # added to track URLs for deeper scanning
 

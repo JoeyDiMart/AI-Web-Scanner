@@ -1,6 +1,7 @@
 import argparse
 from waspai import GetInfo
 from waspai import ScanManager
+from waspai import AiFeedback
 import requests
 
 
@@ -27,6 +28,9 @@ class Scanner:
         # after the scans finish
         self.scan_results = None  # this is a list
 
+        # final ai feedback
+        self.feedback = None
+
     def getInfo(self) -> None:
         if self.app_type == "auto" or self.app_type == "unknown":
             self.adaptive_timeout, self.app_type, self.driver, self.entry_fields, self.headers = (
@@ -39,6 +43,9 @@ class Scanner:
 
     def manageScans(self) -> None:
         self.scan_results = ScanManager.main(self.driver, self.entry_fields, self.headers, self.scan_types, self.url)
+
+    def aiFeedback(self) -> None:
+        self.feedback = AiFeedback.main(self.scan_map, self.scan_results)
 
 
 def clean_args(raw: argparse.Namespace) -> dict[str: any]:
@@ -125,8 +132,9 @@ def runner(scanner) -> str:
         print(i)
     '''
     scanner.manageScans()
+    scanner.aiFeedback()
 
-    print(scanner.scan_results)
+    print("\n\n\n", scanner.scan_results)
 
     return results
 

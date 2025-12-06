@@ -1,3 +1,3 @@
 
-__all__ = ["GetInfo", "ai_feedback", "ScanManager"]
+__all__ = ["GetInfo", "AiFeedback.py", "ScanManager"]
 __version__ = "0.1.0"
