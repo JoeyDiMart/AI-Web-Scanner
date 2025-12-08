@@ -122,7 +122,6 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def runner(scanner) -> str:
-    results = ""
 
     scanner.getInfo()
 
@@ -134,9 +133,9 @@ def runner(scanner) -> str:
     scanner.manageScans()
     scanner.aiFeedback()
 
-    print("\n\n\n", scanner.scan_results)
+    #print("\n\n\n", scanner.scan_results)
 
-    return results
+    return
 
 
 def main() -> int:
@@ -149,8 +148,8 @@ def main() -> int:
         return 0
 
     scanner = Scanner(args)  # create the Scanner object
-    results = runner(scanner)  # results will be the final scoring / feedback
-
+    runner(scanner)  # results will be the final scoring / feedback
+    print(scanner.feedback)
     return 1
 
 
