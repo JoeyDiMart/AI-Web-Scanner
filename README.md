@@ -69,3 +69,8 @@ like to go further and follow more bread crumbs, you can run the following:
 ```bash
 waspai {ip_address/domain_name} -depth {max_depth}
 ```
+
+8. The scanner will automatically store the results when gathering information about the web page, such as parsing 
+to grab input fields, however these results will not be printed. Although the code is not complete, they are stored in
+'scanner.entry_fields.' If 'print_responses' set to 'true' than the found fields can be printed. Code will have to be 
+written to make this happen, but variables are set to make this easier to implement.
