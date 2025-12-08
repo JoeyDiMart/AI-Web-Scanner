@@ -74,3 +74,7 @@ waspai {ip_address/domain_name} -depth {max_depth}
 to grab input fields, however these results will not be printed. Although the code is not complete, they are stored in
 'scanner.entry_fields.' If 'print_responses' set to 'true' than the found fields can be printed. Code will have to be 
 written to make this happen, but variables are set to make this easier to implement.
+```bash
+waspai {ip_address/domain_name} -pr
+```
+
