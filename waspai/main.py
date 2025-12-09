@@ -45,7 +45,7 @@ class Scanner:
         self.scan_results = ScanManager.main(self.driver, self.entry_fields, self.headers, self.scan_types, self.url)
 
     def aiFeedback(self) -> None:
-        self.feedback = AiFeedback.main(self.scan_map, self.scan_results)
+        self.feedback = AiFeedback.main(self.app_type, self.scan_map, self.scan_results)
 
 
 def clean_args(raw: argparse.Namespace) -> dict[str: any]:
@@ -121,7 +121,7 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def runner(scanner) -> str:
+def runner(scanner):
 
     scanner.getInfo()
 
@@ -132,9 +132,6 @@ def runner(scanner) -> str:
     '''
     scanner.manageScans()
     scanner.aiFeedback()
-
-    #print("\n\n\n", scanner.scan_results)
-
     return
 
 
@@ -155,3 +152,6 @@ def main() -> int:
 
 if __name__ == "__main__":
     main()
+
+
+
