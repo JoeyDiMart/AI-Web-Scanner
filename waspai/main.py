@@ -96,7 +96,6 @@ def clean_args(raw: argparse.Namespace) -> dict[str: any]:
         "url": raw.url,
     }
 
-
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog='waspai', description='An AI-integrated Web Scanner')
     parser.add_argument("url", help="Target web app URL (e.g., http://localhost:3030)")
